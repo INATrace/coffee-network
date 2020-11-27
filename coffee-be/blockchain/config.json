@@ -1,0 +1,106 @@
+{
+  "docker": {
+    "fabricVersion": "2.2.0",
+    "fabricCAVersion": "1.4.8"
+  },
+  "consortiums": {
+    "consortium0": {
+      "name": "CoffeeConsortium"
+    }
+  },
+  "organizations": {
+    "org0": {
+      "name": "Orderer",
+      "domain": ""
+    },
+    "org1": {
+      "name": "Coop",
+      "domain": ""
+    },
+    "org2": {
+      "name": "Analytics",
+      "domain": ""
+    }
+  },
+  "orderers": {
+    "org0": {
+      "orderer0": {
+        "host": "orderer0",
+        "port": "7050",
+        "imageTag": "latest"
+      }
+    }
+  },
+  "peers": {
+    "org1": {
+      "peer0": {
+        "host": "peer0",
+        "port": "7051",
+        "chaincodePort": "7052",
+        "imageTag": "latest"
+      }
+    },
+    "org2": {
+      "peer0": {
+        "host": "peer0",
+        "port": "9051",
+        "chaincodePort": "9052",
+        "imageTag": "latest"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "org1": {
+      "host": "ca",
+      "port": "7054",
+      "username": "",
+      "password": "",
+      "imageTag": "latest"
+    },
+    "org2": {
+      "host": "ca",
+      "port": "8054",
+      "username": "",
+      "password": "",
+      "imageTag": "latest"
+    }
+  },
+  "databases": {
+    "db1": {
+      "host": "couchdb0",
+      "port": "7984",
+      "username": "",
+      "password": "",
+      "imageTag": "latest"
+    },
+    "db2": {
+      "host": "couchdb2",
+      "port": "7985",
+      "username": "",
+      "password": "",
+      "imageTag": "latest"
+    },
+    "db3": {
+      "host": "couchdb0replica",
+      "port": "8984",
+      "username": "",
+      "password": "",
+      "imageTag": "latest"
+    }
+  },
+  "channels": {
+    "channel0": {
+      "profile": "SystemChannel",
+      "name": "system-channel"
+    },
+    "channel1": {
+      "profile": "CoffeeChannel",
+      "name": "coffee-channel"
+    }
+  },
+  "chaincodes": {
+    "chaincode0": {
+      "name": "storage"
+    }
+  }
+}

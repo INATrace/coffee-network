@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "semiProductId"
+        ]
+    },
+    "name": "semi_product_id",
+    "type": "json",
+    "ddoc": "semi_product_id"
+}

@@ -1,0 +1,12 @@
+{
+  "index": {
+    "fields": [
+      "docType",
+      "payingOrganizationId",
+      "receiptNumber"
+    ]
+  },
+  "name": "paying_organization_id_receipt_number",
+  "type": "json",
+  "ddoc": "paying_organization_id_receipt_number"
+}

@@ -1,0 +1,49 @@
+
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: Orderer
+    Domain: 
+    EnableNodeOUs: true
+
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: orderer
+        SANS:
+            - "localhost"
+            - "127.0.0.1"
+
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org1
+  # ---------------------------------------------------------------------------
+  - Name: Coop
+    Domain: 
+    EnableNodeOUs: true
+
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+
+    Users:
+      Count: 1
+
+  - Name: Analytics
+    Domain: 
+    EnableNodeOUs: true
+
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+
+    Users:
+      Count: 1

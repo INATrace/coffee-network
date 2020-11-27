@@ -1,0 +1,12 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "producerUserCustomerId",
+            "formalCreationTime"
+        ]
+    },
+    "name": "producer_user_id_formal_creation_time",
+    "type": "json",
+    "ddoc": "producer_user_id_formal_creation_time"
+}

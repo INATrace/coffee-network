@@ -1,0 +1,12 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "recipientCustomerId",
+            "formalCreationTime"
+        ]
+    },
+    "name": "recipient_customer_id_formal_creation_time",
+    "type": "json",
+    "ddoc": "recipient_customer_id_formal_creation_time"
+}

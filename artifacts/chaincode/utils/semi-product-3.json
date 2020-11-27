@@ -1,0 +1,21 @@
+{
+    "_id": "bc2b8178-162e-4389-a59c-7571edfbbbb0",
+    "_rev": "1-06fa2127fbbb2f362cdb0c0646e92dba",
+    "docType": "semi_product",
+    "created": "2020-09-07T21:28:23.372Z",
+    "lastChange": "2020-09-07T21:28:23.372Z",
+    "userCreatedId": null,
+    "userChangedId": null,
+    "productId": "51ba8000-816c-4c9c-94a0-d4b471c9e4f3",
+    "name": "FIBC export bag. Angelique’s Finest",
+    "description": "FIBC export bag čšžČŠŽ",
+    "measurementUnitType": {
+        "_id": "3c600369-3473-4876-9e4b-47b8118128b8",
+        "_rev": "1-9fa3fcf6481b8b9cfb07ed927584a278",
+        "id": "BAG_60",
+        "label": "Bag (60 kg)",
+        "docType": "c_measure_unit_type"
+    },
+    "isSKU": true,
+    "isBuyable": false
+}

@@ -1,0 +1,12 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "productId",
+            "organizationId"
+        ]
+    },
+    "name": "product_and_organization_id",
+    "type": "json",
+    "ddoc": "product_and_organization_id"
+}

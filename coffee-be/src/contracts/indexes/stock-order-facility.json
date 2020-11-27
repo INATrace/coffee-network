@@ -1,0 +1,12 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "facilityId",
+            "isAvailable"
+        ]
+    },
+    "name": "stock_order_facility",
+    "type": "json",
+    "ddoc": "stock_order_facility"
+}

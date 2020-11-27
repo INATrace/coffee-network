@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "id"
+        ]
+    },
+    "name": "id_link",
+    "type": "json",
+    "ddoc": "id_link"
+}

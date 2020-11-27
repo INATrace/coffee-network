@@ -1,0 +1,49 @@
+{
+  "name": "",
+  "version": "1",
+  "client": {
+      "organization": "{organizations.org1.name}",
+      "connection": {
+          "timeout": {
+              "peer": {
+                  "endorser": "300"
+              }
+          }
+      }
+  },
+  "organizations": {
+      "{organizations.org1.name}": {
+          "mspid": "{organizations.org1.name}MSP",
+          "peers": [
+              "{peers.org1.peer0.host}.{organizations.org1.domain}"
+          ],
+          "certificateAuthorities": [
+              "{certificateAuthorities.org1.host}.{organizations.org1.domain}"
+          ]
+      }
+  },
+  "peers": {
+      "{peers.org1.peer0.host}.{organizations.org1.domain}": {
+          "url": "grpcs://localhost:{peers.org1.peer0.port}",
+          "tlsCACerts": {
+              "pem": "{tlsCACertOrg1Peer}"
+          },
+          "grpcOptions": {
+              "ssl-target-name-override": "{peers.org1.peer0.host}.{organizations.org1.domain}",
+              "hostnameOverride": "{peers.org1.peer0.host}.{organizations.org1.domain}"
+          }
+      }
+  },
+  "certificateAuthorities": {
+      "{certificateAuthorities.org1.host}.{organizations.org1.domain}": {
+          "url": "https://localhost:{certificateAuthorities.org1.port}",
+          "caName": "{certificateAuthorities.org1.host}.{organizations.org1.domain}",
+          "tlsCACerts": {
+              "pem": "{tlsCACertOrg1CA}"
+          },
+          "httpOptions": {
+              "verify": false
+          }
+      }
+  }
+}

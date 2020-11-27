@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "bankTransferId"
+        ]
+    },
+    "name": "bank_transfer_id",
+    "type": "json",
+    "ddoc": "bank_transfer_id"
+}

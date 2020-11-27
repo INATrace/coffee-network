@@ -1,0 +1,945 @@
+{
+    "docType": "semi_product",
+    "_id": "88dffa36-8199-4c69-a909-b38838719207",
+    "_rev": "8-c96e2500c03159fa8c539fbc7100789d",
+    "created": "2020-07-22T23:20:12.692Z",
+    "lastChange": "2020-09-07T21:46:45.711Z",
+    "userCreatedId": null,
+    "userChangedId": null,
+    "productId": "51ba8000-816c-4c9c-94a0-d4b471c9e4f3",
+    "name": "White bag of green beans ",
+    "description": "White bag of green beans",
+    "measurementUnitType": {
+        "_id": "3c600369-3473-4876-9e4b-47b8118128b8",
+        "_rev": "1-9fa3fcf6481b8b9cfb07ed927584a278",
+        "id": "BAG_60",
+        "label": "Bag (60 kg)",
+        "docType": "c_measure_unit_type"
+    },
+    "isSKU": true,
+    "isBuyable": false,
+    "product": {
+        "docType": "product",
+        "_id": "51ba8000-816c-4c9c-94a0-d4b471c9e4f3",
+        "_rev": "12-4f27e69fbbdcc4d69d80089258846d7a",
+        "id": 1,
+        "name": "Angelique’s Finest – 100% made by women of Rwanda",
+        "description": "aAngelique’s Finest is a Rwandan specialty coffee brand produced entirely by women of Rwanda, from the farm to roasting and packaging.",
+        "howToUse": "How to make the best brew from Angelique’s Finest....",
+        "ingredients": "Angelique's Finest is an aromatic fair trade espresso coffee from the volcanic mountains of Rwanda, which is produced by women. The Arabica highland coffee is characterized by aromas of honey, dark chocolate, black tea, and caramel. There is also a refreshing apple finish!\nAngelique's Finest Espresso is available as a bean or ground.",
+        "nutritionalValue": "",
+        "origin": {
+            "text": "Rwanda",
+            "locations": [
+                {
+                    "latitude": -1.9616129697756435,
+                    "longitude": 29.934509246978287,
+                    "numberOfFarmers": 100,
+                    "pinName": "Musasa"
+                },
+                {
+                    "latitude": -2.0329807137312823,
+                    "longitude": 29.953735321197037,
+                    "numberOfFarmers": 200,
+                    "pinName": "Koakaka"
+                },
+                {
+                    "latitude": -2.0065991305016593,
+                    "longitude": 29.929042601161946,
+                    "numberOfFarmers": 584
+                }
+            ]
+        },
+        "photo": {
+            "id": 44,
+            "storageKey": "2ed65504-bf4b-48b5-96ee-f2d70f902e81",
+            "name": "MG_1260.jpg",
+            "contentType": "image/jpeg",
+            "size": 1922925
+        },
+        "process": {
+            "production": "Fairtrade Plus: grown under fair conditions by our partner cooperative (Fairtrade certified), locally roasted and aroma packed.\nWe encourage the positive development that women not only grow coffee, but now also take control of further processing themselves. Only if women conquer all areas of work can they get their fair share and develop new skills. That is why we support Rwandan women's cooperatives by making their coffee accessible to the German market, which is the third largest coffee market in the world.",
+            "codesOfConduct": "In addition, Angelique's Finest Fairtrade is certified and fulfills all FairtradePLUS requirements such as our proven Café de Maraba.\nThe coffee is recognized by the International Women Coffee Alliance (IWCA). The supporters of Angelique's Finest include the women's rights organization  TERRE DES FEMMES and the women's magazine  BRIGITTE.",
+            "standards": [
+                {
+                    "description": "Fairtrade certificate"
+                },
+                {
+                    "description": "Rainforrest Aliance"
+                }
+            ],
+            "records": []
+        },
+        "responsibility": {
+            "laborPolicies": "Coffee production is very labor-intensive: the shrubs have to be cut, the weeds removed and then the ripe fruit is harvested and selected and processed. In the women's cooperatives Rambagira Kawa and Icyerekezo, every bean is picked four times by hand. According to studies, around 70 percent of the work in the coffee production process is done by women, primarily the physically demanding work at the beginning of the value chain, but on average they only receive 30 percent of the proceeds. With our coffee made entirely by women, the producers are guaranteed fair wages.",
+            "farmer": "Rwanda is already the country with the highest proportion of women in politics worldwide and women are also very strong in the economy. ",
+            "story": "Angelique Karekezi is the driving force. She is the managing director of Rwashoscco, the cooperative-owned company that organizes the sale of coffee in international markets. Angelique is particularly concerned to strengthen the position of women in the coffee trade and to accompany them on their way to independence. That is why the coffee bears its name.",
+            "pictures": [
+                {
+                    "description": "With our coffee made entirely by women, the producers are guaranteed fair wages.",
+                    "document": {
+                        "id": 46,
+                        "storageKey": "836a2829-1f88-4e40-af76-b1bde57d18b9",
+                        "name": "Sprudge-WomenCoffeeFarmers-AnnaBrones-photo_by_GlennaGordon_ITC_01.jpg",
+                        "contentType": "image/jpeg",
+                        "size": 650266
+                    }
+                },
+                {
+                    "description": "Angelique Karekezi is the driving force behind AFC."
+                }
+            ]
+        },
+        "sustainability": {
+            "production": "Angelique's Finest is an aromatic specialty coffee from the volcanic mountains of Rwanda, which is produced by women. The income enables women and their families to have financial independence and more participation. The Arabica highland coffee is characterized by a gentle sweetness, a hint of chocolate and a delicate berry note."
+        },
+        "keyMarketsShare": {},
+        "companyId": 2,
+        "organizationRoles": [
+            {
+                "companyId": 4,
+                "role": "BUYER"
+            },
+            {
+                "companyId": 3,
+                "role": "PRODUCER"
+            },
+            {
+                "companyId": 1,
+                "role": "PRODUCER"
+            },
+            {
+                "companyId": 2,
+                "role": "OWNER"
+            },
+            {
+                "companyId": 5,
+                "role": "ROASTER"
+            },
+            {
+                "companyId": 17,
+                "role": "ASSOCIATION"
+            },
+            {
+                "companyId": 10,
+                "role": "ASSOCIATION"
+            },
+            {
+                "companyId": 22,
+                "role": "BUYER"
+            }
+        ],
+        "labels": [
+            {
+                "id": 1,
+                "productId": 1,
+                "status": "PUBLISHED",
+                "uuid": "10597ed76f9e49729cc42f348821b401",
+                "title": "Angelique’s Finest - DM",
+                "fields": [
+                    {
+                        "name": "name",
+                        "section": "product",
+                        "value": "Angelique’s Finest – 100% made by women of Rwanda"
+                    },
+                    {
+                        "name": "photo",
+                        "section": "product",
+                        "value": {
+                            "id": 44,
+                            "storageKey": "7ec952d9-cb94-489d-b171-45603c85f6d0",
+                            "name": "MG_1260.jpg",
+                            "contentType": "image/jpeg",
+                            "size": 1922925
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "section": "product",
+                        "value": "aAngelique’s Finest is a Rwandan specialty coffee brand produced entirely by women of Rwanda, from the farm to roasting and packaging."
+                    },
+                    {
+                        "name": "ingredients",
+                        "section": "product",
+                        "value": "Angelique's Finest is an aromatic fair trade espresso coffee from the volcanic mountains of Rwanda, which is produced by women. The Arabica highland coffee is characterized by aromas of honey, dark chocolate, black tea, and caramel. There is also a refreshing apple finish!\nAngelique's Finest Espresso is available as a bean or ground."
+                    },
+                    {
+                        "name": "howToUse",
+                        "section": "product",
+                        "value": "How to make the best brew from Angelique’s Finest...."
+                    },
+                    {
+                        "name": "origin",
+                        "section": "product",
+                        "value": {
+                            "text": "Rwanda",
+                            "locations": [
+                                {
+                                    "latitude": -1.9616129697756435,
+                                    "longitude": 29.934509246978287,
+                                    "numberOfFarmers": 100,
+                                    "pinName": "Musasa"
+                                },
+                                {
+                                    "latitude": -2.0329807137312823,
+                                    "longitude": 29.953735321197037,
+                                    "numberOfFarmers": 200,
+                                    "pinName": "Koakaka"
+                                },
+                                {
+                                    "latitude": -2.0065991305016593,
+                                    "longitude": 29.929042601161946,
+                                    "numberOfFarmers": 584
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "process.production",
+                        "section": "process",
+                        "value": "Fairtrade Plus: grown under fair conditions by our partner cooperative (Fairtrade certified), locally roasted and aroma packed.\nWe encourage the positive development that women not only grow coffee, but now also take control of further processing themselves. Only if women conquer all areas of work can they get their fair share and develop new skills. That is why we support Rwandan women's cooperatives by making their coffee accessible to the German market, which is the third largest coffee market in the world."
+                    },
+                    {
+                        "name": "process.codesOfConduct",
+                        "section": "process",
+                        "value": "In addition, Angelique's Finest Fairtrade is certified and fulfills all FairtradePLUS requirements such as our proven Café de Maraba.\nThe coffee is recognized by the International Women Coffee Alliance (IWCA). The supporters of Angelique's Finest include the women's rights organization  TERRE DES FEMMES and the women's magazine  BRIGITTE."
+                    },
+                    {
+                        "name": "process.standards",
+                        "section": "process",
+                        "value": [
+                            {
+                                "description": "Fairtrade certificate"
+                            },
+                            {
+                                "description": "Rainforrest Aliance"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.laborPolicies",
+                        "section": "responsibility",
+                        "value": "Coffee production is very labor-intensive: the shrubs have to be cut, the weeds removed and then the ripe fruit is harvested and selected and processed. In the women's cooperatives Rambagira Kawa and Icyerekezo, every bean is picked four times by hand. According to studies, around 70 percent of the work in the coffee production process is done by women, primarily the physically demanding work at the beginning of the value chain, but on average they only receive 30 percent of the proceeds. With our coffee made entirely by women, the producers are guaranteed fair wages."
+                    },
+                    {
+                        "name": "responsibility.farmer",
+                        "section": "responsibility",
+                        "value": "Rwanda is already the country with the highest proportion of women in politics worldwide and women are also very strong in the economy. "
+                    },
+                    {
+                        "name": "responsibility.pictures",
+                        "section": "responsibility",
+                        "value": [
+                            {
+                                "description": "With our coffee made entirely by women, the producers are guaranteed fair wages.",
+                                "document": {
+                                    "id": 46,
+                                    "storageKey": "3d649544-5da8-4560-832f-9cd4a86552fe",
+                                    "name": "Sprudge-WomenCoffeeFarmers-AnnaBrones-photo_by_GlennaGordon_ITC_01.jpg",
+                                    "contentType": "image/jpeg",
+                                    "size": 650266
+                                }
+                            },
+                            {
+                                "description": "Angelique Karekezi is the driving force behind AFC."
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.story",
+                        "section": "responsibility",
+                        "value": "Angelique Karekezi is the driving force. She is the managing director of Rwashoscco, the cooperative-owned company that organizes the sale of coffee in international markets. Angelique is particularly concerned to strengthen the position of women in the coffee trade and to accompany them on their way to independence. That is why the coffee bears its name."
+                    },
+                    {
+                        "name": "sustainability.production",
+                        "section": "sustainability",
+                        "value": "Angelique's Finest is an aromatic specialty coffee from the volcanic mountains of Rwanda, which is produced by women. The income enables women and their families to have financial independence and more participation. The Arabica highland coffee is characterized by a gentle sweetness, a hint of chocolate and a delicate berry note."
+                    },
+                    {
+                        "name": "company.name",
+                        "section": "company",
+                        "value": "Rwashoscco - Rwanda Small Holder Speciality coffee Company"
+                    },
+                    {
+                        "name": "company.logo",
+                        "section": "company",
+                        "value": {
+                            "id": 4,
+                            "storageKey": "9513fe19-647b-4758-8067-d3c36b2ce5d0",
+                            "name": "Rwashoscco-logo-01.png",
+                            "contentType": "image/png",
+                            "size": 13871
+                        }
+                    },
+                    {
+                        "name": "company.headquarters",
+                        "section": "company",
+                        "value": {
+                            "address": "Rwanda Small Holder Speciality coffee Company",
+                            "city": "Kigali",
+                            "state": "Gasabo",
+                            "zip": "7342",
+                            "country": {
+                                "id": 184,
+                                "code": "RW",
+                                "name": "Rwanda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "company.about",
+                        "section": "company",
+                        "value": "We produce and export green coffee beans that originate from the fertile soils of Rwanda. Our farmers operates from 6 growing regions of the country making our coffee taste and flavors unique. we utilize certified growing and processing methods to ensure every bean will be a result of speciality taste.\n\nCoffee Promotion, Export and Roasting is at the heart of what we do. We are your direct origin of Rwanda's speciality coffees."
+                    },
+                    {
+                        "name": "company.email",
+                        "section": "company",
+                        "value": "info@rwashoscco.com"
+                    },
+                    {
+                        "name": "company.phone",
+                        "section": "company",
+                        "value": "+250788456614"
+                    },
+                    {
+                        "name": "company.webPage",
+                        "section": "company",
+                        "value": "http://www.rwashoscco.com"
+                    },
+                    {
+                        "name": "company.mediaLinks.facebook",
+                        "section": "company",
+                        "value": "https://web.facebook.com/rwashosccoltd/"
+                    },
+                    {
+                        "name": "company.mediaLinks.instagram",
+                        "section": "company",
+                        "value": "https://www.instagram.com/rwashoscco/?hl=fr"
+                    },
+                    {
+                        "name": "company.mediaLinks.twitter",
+                        "section": "company",
+                        "value": "https://twitter.com/rwashoscco"
+                    },
+                    {
+                        "name": "company.mediaLinks.youtube",
+                        "section": "company",
+                        "value": "https://www.youtube.com/watch?v=ChoSu1PBrwg&t=8s"
+                    },
+                    {
+                        "name": "company.mediaLinks.other",
+                        "section": "company"
+                    }
+                ]
+            },
+            {
+                "id": 6,
+                "productId": 1,
+                "status": "PUBLISHED",
+                "uuid": "0aaff4f9cd2243fb830da8c08a14957d",
+                "title": "Distributor",
+                "fields": [
+                    {
+                        "name": "name",
+                        "section": "product",
+                        "value": "Angelique’s Finest – 100% made by women of Rwanda"
+                    },
+                    {
+                        "name": "photo",
+                        "section": "product",
+                        "value": {
+                            "id": 44,
+                            "storageKey": "bab0a2e4-8e1f-43a3-9294-41b40c1e6859",
+                            "name": "MG_1260.jpg",
+                            "contentType": "image/jpeg",
+                            "size": 1922925
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "section": "product",
+                        "value": "aAngelique’s Finest is a Rwandan specialty coffee brand produced entirely by women of Rwanda, from the farm to roasting and packaging."
+                    },
+                    {
+                        "name": "ingredients",
+                        "section": "product",
+                        "value": "Angelique's Finest is an aromatic fair trade espresso coffee from the volcanic mountains of Rwanda, which is produced by women. The Arabica highland coffee is characterized by aromas of honey, dark chocolate, black tea, and caramel. There is also a refreshing apple finish!\nAngelique's Finest Espresso is available as a bean or ground."
+                    },
+                    {
+                        "name": "howToUse",
+                        "section": "product",
+                        "value": "How to make the best brew from Angelique’s Finest...."
+                    },
+                    {
+                        "name": "origin",
+                        "section": "product",
+                        "value": {
+                            "text": "Rwanda",
+                            "locations": [
+                                {
+                                    "latitude": -1.9616129697756435,
+                                    "longitude": 29.934509246978287,
+                                    "numberOfFarmers": 100,
+                                    "pinName": "Musasa"
+                                },
+                                {
+                                    "latitude": -2.0329807137312823,
+                                    "longitude": 29.953735321197037,
+                                    "numberOfFarmers": 200,
+                                    "pinName": "Koakaka"
+                                },
+                                {
+                                    "latitude": -2.0065991305016593,
+                                    "longitude": 29.929042601161946,
+                                    "numberOfFarmers": 584
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "process.production",
+                        "section": "process",
+                        "value": "Fairtrade Plus: grown under fair conditions by our partner cooperative (Fairtrade certified), locally roasted and aroma packed.\nWe encourage the positive development that women not only grow coffee, but now also take control of further processing themselves. Only if women conquer all areas of work can they get their fair share and develop new skills. That is why we support Rwandan women's cooperatives by making their coffee accessible to the German market, which is the third largest coffee market in the world."
+                    },
+                    {
+                        "name": "process.codesOfConduct",
+                        "section": "process",
+                        "value": "In addition, Angelique's Finest Fairtrade is certified and fulfills all FairtradePLUS requirements such as our proven Café de Maraba.\nThe coffee is recognized by the International Women Coffee Alliance (IWCA). The supporters of Angelique's Finest include the women's rights organization  TERRE DES FEMMES and the women's magazine  BRIGITTE."
+                    },
+                    {
+                        "name": "process.standards",
+                        "section": "process",
+                        "value": [
+                            {
+                                "description": "Fairtrade certificate"
+                            },
+                            {
+                                "description": "Rainforrest Aliance"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.laborPolicies",
+                        "section": "responsibility",
+                        "value": "Coffee production is very labor-intensive: the shrubs have to be cut, the weeds removed and then the ripe fruit is harvested and selected and processed. In the women's cooperatives Rambagira Kawa and Icyerekezo, every bean is picked four times by hand. According to studies, around 70 percent of the work in the coffee production process is done by women, primarily the physically demanding work at the beginning of the value chain, but on average they only receive 30 percent of the proceeds. With our coffee made entirely by women, the producers are guaranteed fair wages."
+                    },
+                    {
+                        "name": "responsibility.farmer",
+                        "section": "responsibility",
+                        "value": "Rwanda is already the country with the highest proportion of women in politics worldwide and women are also very strong in the economy. "
+                    },
+                    {
+                        "name": "responsibility.pictures",
+                        "section": "responsibility",
+                        "value": [
+                            {
+                                "description": "With our coffee made entirely by women, the producers are guaranteed fair wages.",
+                                "document": {
+                                    "id": 46,
+                                    "storageKey": "24218fa9-0181-41c9-b7d7-4d41bb595339",
+                                    "name": "Sprudge-WomenCoffeeFarmers-AnnaBrones-photo_by_GlennaGordon_ITC_01.jpg",
+                                    "contentType": "image/jpeg",
+                                    "size": 650266
+                                }
+                            },
+                            {
+                                "description": "Angelique Karekezi is the driving force behind AFC."
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.story",
+                        "section": "responsibility",
+                        "value": "Angelique Karekezi is the driving force. She is the managing director of Rwashoscco, the cooperative-owned company that organizes the sale of coffee in international markets. Angelique is particularly concerned to strengthen the position of women in the coffee trade and to accompany them on their way to independence. That is why the coffee bears its name."
+                    },
+                    {
+                        "name": "sustainability.production",
+                        "section": "sustainability",
+                        "value": "Angelique's Finest is an aromatic specialty coffee from the volcanic mountains of Rwanda, which is produced by women. The income enables women and their families to have financial independence and more participation. The Arabica highland coffee is characterized by a gentle sweetness, a hint of chocolate and a delicate berry note."
+                    },
+                    {
+                        "name": "company.name",
+                        "section": "company",
+                        "value": "Rwashoscco - Rwanda Small Holder Speciality coffee Company"
+                    },
+                    {
+                        "name": "company.logo",
+                        "section": "company",
+                        "value": {
+                            "id": 4,
+                            "storageKey": "61f2f8b5-563e-45a2-86fd-633d99eadb7e",
+                            "name": "Rwashoscco-logo-01.png",
+                            "contentType": "image/png",
+                            "size": 13871
+                        }
+                    },
+                    {
+                        "name": "company.headquarters",
+                        "section": "company",
+                        "value": {
+                            "address": "Rwanda Small Holder Speciality coffee Company",
+                            "city": "Kigali",
+                            "state": "Gasabo",
+                            "zip": "7342",
+                            "country": {
+                                "id": 184,
+                                "code": "RW",
+                                "name": "Rwanda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "company.about",
+                        "section": "company",
+                        "value": "We produce and export green coffee beans that originate from the fertile soils of Rwanda. Our farmers operates from 6 growing regions of the country making our coffee taste and flavors unique. we utilize certified growing and processing methods to ensure every bean will be a result of speciality taste.\n\nCoffee Promotion, Export and Roasting is at the heart of what we do. We are your direct origin of Rwanda's speciality coffees."
+                    },
+                    {
+                        "name": "company.email",
+                        "section": "company",
+                        "value": "info@rwashoscco.com"
+                    },
+                    {
+                        "name": "company.phone",
+                        "section": "company",
+                        "value": "+250788456614"
+                    },
+                    {
+                        "name": "company.webPage",
+                        "section": "company",
+                        "value": "http://www.rwashoscco.com"
+                    },
+                    {
+                        "name": "company.mediaLinks.facebook",
+                        "section": "company",
+                        "value": "https://web.facebook.com/rwashosccoltd/"
+                    },
+                    {
+                        "name": "company.mediaLinks.instagram",
+                        "section": "company",
+                        "value": "https://www.instagram.com/rwashoscco/?hl=fr"
+                    },
+                    {
+                        "name": "company.mediaLinks.twitter",
+                        "section": "company",
+                        "value": "https://twitter.com/rwashoscco"
+                    },
+                    {
+                        "name": "company.mediaLinks.youtube",
+                        "section": "company",
+                        "value": "https://www.youtube.com/watch?v=ChoSu1PBrwg&t=8s"
+                    },
+                    {
+                        "name": "company.mediaLinks.other",
+                        "section": "company"
+                    }
+                ]
+            },
+            {
+                "id": 11,
+                "productId": 1,
+                "status": "UNPUBLISHED",
+                "uuid": "1f7951ddf52746038b6ede1f5532d7bd",
+                "title": "EMPLOYEES",
+                "fields": [
+                    {
+                        "name": "name",
+                        "section": "product",
+                        "value": "Angelique’s Finest – 100% made by women of Rwanda"
+                    },
+                    {
+                        "name": "photo",
+                        "section": "product",
+                        "value": {
+                            "id": 44,
+                            "storageKey": "a1966274-183f-485c-b61c-2b0095635752",
+                            "name": "MG_1260.jpg",
+                            "contentType": "image/jpeg",
+                            "size": 1922925
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "section": "product",
+                        "value": "aAngelique’s Finest is a Rwandan specialty coffee brand produced entirely by women of Rwanda, from the farm to roasting and packaging."
+                    },
+                    {
+                        "name": "ingredients",
+                        "section": "product",
+                        "value": "Angelique's Finest is an aromatic fair trade espresso coffee from the volcanic mountains of Rwanda, which is produced by women. The Arabica highland coffee is characterized by aromas of honey, dark chocolate, black tea, and caramel. There is also a refreshing apple finish!\nAngelique's Finest Espresso is available as a bean or ground."
+                    },
+                    {
+                        "name": "howToUse",
+                        "section": "product",
+                        "value": "How to make the best brew from Angelique’s Finest...."
+                    },
+                    {
+                        "name": "origin",
+                        "section": "product",
+                        "value": {
+                            "text": "Rwanda",
+                            "locations": [
+                                {
+                                    "latitude": -1.9616129697756435,
+                                    "longitude": 29.934509246978287,
+                                    "numberOfFarmers": 100,
+                                    "pinName": "Musasa"
+                                },
+                                {
+                                    "latitude": -2.0329807137312823,
+                                    "longitude": 29.953735321197037,
+                                    "numberOfFarmers": 200,
+                                    "pinName": "Koakaka"
+                                },
+                                {
+                                    "latitude": -2.0065991305016593,
+                                    "longitude": 29.929042601161946,
+                                    "numberOfFarmers": 584
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "process.production",
+                        "section": "process",
+                        "value": "Fairtrade Plus: grown under fair conditions by our partner cooperative (Fairtrade certified), locally roasted and aroma packed.\nWe encourage the positive development that women not only grow coffee, but now also take control of further processing themselves. Only if women conquer all areas of work can they get their fair share and develop new skills. That is why we support Rwandan women's cooperatives by making their coffee accessible to the German market, which is the third largest coffee market in the world."
+                    },
+                    {
+                        "name": "process.codesOfConduct",
+                        "section": "process",
+                        "value": "In addition, Angelique's Finest Fairtrade is certified and fulfills all FairtradePLUS requirements such as our proven Café de Maraba.\nThe coffee is recognized by the International Women Coffee Alliance (IWCA). The supporters of Angelique's Finest include the women's rights organization  TERRE DES FEMMES and the women's magazine  BRIGITTE."
+                    },
+                    {
+                        "name": "process.standards",
+                        "section": "process",
+                        "value": [
+                            {
+                                "description": "Fairtrade certificate"
+                            },
+                            {
+                                "description": "Rainforrest Aliance"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.laborPolicies",
+                        "section": "responsibility",
+                        "value": "Coffee production is very labor-intensive: the shrubs have to be cut, the weeds removed and then the ripe fruit is harvested and selected and processed. In the women's cooperatives Rambagira Kawa and Icyerekezo, every bean is picked four times by hand. According to studies, around 70 percent of the work in the coffee production process is done by women, primarily the physically demanding work at the beginning of the value chain, but on average they only receive 30 percent of the proceeds. With our coffee made entirely by women, the producers are guaranteed fair wages."
+                    },
+                    {
+                        "name": "responsibility.farmer",
+                        "section": "responsibility",
+                        "value": "Rwanda is already the country with the highest proportion of women in politics worldwide and women are also very strong in the economy. "
+                    },
+                    {
+                        "name": "responsibility.pictures",
+                        "section": "responsibility",
+                        "value": [
+                            {
+                                "description": "With our coffee made entirely by women, the producers are guaranteed fair wages.",
+                                "document": {
+                                    "id": 46,
+                                    "storageKey": "be51d694-443f-419e-a426-767a16379af8",
+                                    "name": "Sprudge-WomenCoffeeFarmers-AnnaBrones-photo_by_GlennaGordon_ITC_01.jpg",
+                                    "contentType": "image/jpeg",
+                                    "size": 650266
+                                }
+                            },
+                            {
+                                "description": "Angelique Karekezi is the driving force behind AFC."
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.story",
+                        "section": "responsibility",
+                        "value": "Angelique Karekezi is the driving force. She is the managing director of Rwashoscco, the cooperative-owned company that organizes the sale of coffee in international markets. Angelique is particularly concerned to strengthen the position of women in the coffee trade and to accompany them on their way to independence. That is why the coffee bears its name."
+                    },
+                    {
+                        "name": "sustainability.production",
+                        "section": "sustainability",
+                        "value": "Angelique's Finest is an aromatic specialty coffee from the volcanic mountains of Rwanda, which is produced by women. The income enables women and their families to have financial independence and more participation. The Arabica highland coffee is characterized by a gentle sweetness, a hint of chocolate and a delicate berry note."
+                    },
+                    {
+                        "name": "company.name",
+                        "section": "company",
+                        "value": "Rwashoscco - Rwanda Small Holder Speciality coffee Company"
+                    },
+                    {
+                        "name": "company.logo",
+                        "section": "company",
+                        "value": {
+                            "id": 4,
+                            "storageKey": "55be313d-870f-430d-b081-d0c00f993cff",
+                            "name": "Rwashoscco-logo-01.png",
+                            "contentType": "image/png",
+                            "size": 13871
+                        }
+                    },
+                    {
+                        "name": "company.headquarters",
+                        "section": "company",
+                        "value": {
+                            "address": "Rwanda Small Holder Speciality coffee Company",
+                            "city": "Kigali",
+                            "state": "Gasabo",
+                            "zip": "7342",
+                            "country": {
+                                "id": 184,
+                                "code": "RW",
+                                "name": "Rwanda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "company.about",
+                        "section": "company",
+                        "value": "We produce and export green coffee beans that originate from the fertile soils of Rwanda. Our farmers operates from 6 growing regions of the country making our coffee taste and flavors unique. we utilize certified growing and processing methods to ensure every bean will be a result of speciality taste.\n\nCoffee Promotion, Export and Roasting is at the heart of what we do. We are your direct origin of Rwanda's speciality coffees."
+                    },
+                    {
+                        "name": "company.email",
+                        "section": "company",
+                        "value": "info@rwashoscco.com"
+                    },
+                    {
+                        "name": "company.phone",
+                        "section": "company",
+                        "value": "+250788456614"
+                    },
+                    {
+                        "name": "company.webPage",
+                        "section": "company",
+                        "value": "http://www.rwashoscco.com"
+                    },
+                    {
+                        "name": "company.mediaLinks.facebook",
+                        "section": "company",
+                        "value": "https://web.facebook.com/rwashosccoltd/"
+                    },
+                    {
+                        "name": "company.mediaLinks.instagram",
+                        "section": "company",
+                        "value": "https://www.instagram.com/rwashoscco/?hl=fr"
+                    },
+                    {
+                        "name": "company.mediaLinks.twitter",
+                        "section": "company",
+                        "value": "https://twitter.com/rwashoscco"
+                    },
+                    {
+                        "name": "company.mediaLinks.youtube",
+                        "section": "company",
+                        "value": "https://www.youtube.com/watch?v=ChoSu1PBrwg&t=8s"
+                    },
+                    {
+                        "name": "company.mediaLinks.other",
+                        "section": "company"
+                    }
+                ]
+            },
+            {
+                "id": 12,
+                "productId": 1,
+                "status": "UNPUBLISHED",
+                "uuid": "15ef5bc03dcf49e5b565c588d88e58cc",
+                "title": "Demo Sept’20",
+                "fields": [
+                    {
+                        "name": "name",
+                        "section": "product",
+                        "value": "Angelique’s Finest – 100% made by women of Rwanda"
+                    },
+                    {
+                        "name": "photo",
+                        "section": "product",
+                        "value": {
+                            "id": 44,
+                            "storageKey": "7a2a9d6c-cd40-4aa0-af6a-abfdceb38c21",
+                            "name": "MG_1260.jpg",
+                            "contentType": "image/jpeg",
+                            "size": 1922925
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "section": "product",
+                        "value": "aAngelique’s Finest is a Rwandan specialty coffee brand produced entirely by women of Rwanda, from the farm to roasting and packaging."
+                    },
+                    {
+                        "name": "ingredients",
+                        "section": "product",
+                        "value": "Angelique's Finest is an aromatic fair trade espresso coffee from the volcanic mountains of Rwanda, which is produced by women. The Arabica highland coffee is characterized by aromas of honey, dark chocolate, black tea, and caramel. There is also a refreshing apple finish!\nAngelique's Finest Espresso is available as a bean or ground."
+                    },
+                    {
+                        "name": "howToUse",
+                        "section": "product",
+                        "value": "How to make the best brew from Angelique’s Finest...."
+                    },
+                    {
+                        "name": "origin",
+                        "section": "product",
+                        "value": {
+                            "text": "Rwanda",
+                            "locations": [
+                                {
+                                    "latitude": -1.9616129697756435,
+                                    "longitude": 29.934509246978287,
+                                    "numberOfFarmers": 100,
+                                    "pinName": "Musasa"
+                                },
+                                {
+                                    "latitude": -2.0329807137312823,
+                                    "longitude": 29.953735321197037,
+                                    "numberOfFarmers": 200,
+                                    "pinName": "Koakaka"
+                                },
+                                {
+                                    "latitude": -2.0065991305016593,
+                                    "longitude": 29.929042601161946,
+                                    "numberOfFarmers": 584
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "process.production",
+                        "section": "process",
+                        "value": "Fairtrade Plus: grown under fair conditions by our partner cooperative (Fairtrade certified), locally roasted and aroma packed.\nWe encourage the positive development that women not only grow coffee, but now also take control of further processing themselves. Only if women conquer all areas of work can they get their fair share and develop new skills. That is why we support Rwandan women's cooperatives by making their coffee accessible to the German market, which is the third largest coffee market in the world."
+                    },
+                    {
+                        "name": "process.codesOfConduct",
+                        "section": "process",
+                        "value": "In addition, Angelique's Finest Fairtrade is certified and fulfills all FairtradePLUS requirements such as our proven Café de Maraba.\nThe coffee is recognized by the International Women Coffee Alliance (IWCA). The supporters of Angelique's Finest include the women's rights organization  TERRE DES FEMMES and the women's magazine  BRIGITTE."
+                    },
+                    {
+                        "name": "process.standards",
+                        "section": "process",
+                        "value": [
+                            {
+                                "description": "Fairtrade certificate"
+                            },
+                            {
+                                "description": "Rainforrest Aliance"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.laborPolicies",
+                        "section": "responsibility",
+                        "value": "Coffee production is very labor-intensive: the shrubs have to be cut, the weeds removed and then the ripe fruit is harvested and selected and processed. In the women's cooperatives Rambagira Kawa and Icyerekezo, every bean is picked four times by hand. According to studies, around 70 percent of the work in the coffee production process is done by women, primarily the physically demanding work at the beginning of the value chain, but on average they only receive 30 percent of the proceeds. With our coffee made entirely by women, the producers are guaranteed fair wages."
+                    },
+                    {
+                        "name": "responsibility.farmer",
+                        "section": "responsibility",
+                        "value": "Rwanda is already the country with the highest proportion of women in politics worldwide and women are also very strong in the economy. "
+                    },
+                    {
+                        "name": "responsibility.pictures",
+                        "section": "responsibility",
+                        "value": [
+                            {
+                                "description": "With our coffee made entirely by women, the producers are guaranteed fair wages.",
+                                "document": {
+                                    "id": 46,
+                                    "storageKey": "9ed743d4-3ba0-413d-9474-aa4d9b87366e",
+                                    "name": "Sprudge-WomenCoffeeFarmers-AnnaBrones-photo_by_GlennaGordon_ITC_01.jpg",
+                                    "contentType": "image/jpeg",
+                                    "size": 650266
+                                }
+                            },
+                            {
+                                "description": "Angelique Karekezi is the driving force behind AFC."
+                            }
+                        ]
+                    },
+                    {
+                        "name": "responsibility.story",
+                        "section": "responsibility",
+                        "value": "Angelique Karekezi is the driving force. She is the managing director of Rwashoscco, the cooperative-owned company that organizes the sale of coffee in international markets. Angelique is particularly concerned to strengthen the position of women in the coffee trade and to accompany them on their way to independence. That is why the coffee bears its name."
+                    },
+                    {
+                        "name": "sustainability.production",
+                        "section": "sustainability",
+                        "value": "Angelique's Finest is an aromatic specialty coffee from the volcanic mountains of Rwanda, which is produced by women. The income enables women and their families to have financial independence and more participation. The Arabica highland coffee is characterized by a gentle sweetness, a hint of chocolate and a delicate berry note."
+                    },
+                    {
+                        "name": "company.name",
+                        "section": "company",
+                        "value": "Rwashoscco - Rwanda Small Holder Speciality coffee Company"
+                    },
+                    {
+                        "name": "company.logo",
+                        "section": "company",
+                        "value": {
+                            "id": 4,
+                            "storageKey": "0942a8c8-38c7-4cea-a44b-be4222a731be",
+                            "name": "Rwashoscco-logo-01.png",
+                            "contentType": "image/png",
+                            "size": 13871
+                        }
+                    },
+                    {
+                        "name": "company.headquarters",
+                        "section": "company",
+                        "value": {
+                            "address": "Rwanda Small Holder Speciality coffee Company",
+                            "city": "Kigali",
+                            "state": "Gasabo",
+                            "zip": "7342",
+                            "country": {
+                                "id": 184,
+                                "code": "RW",
+                                "name": "Rwanda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "company.about",
+                        "section": "company",
+                        "value": "We produce and export green coffee beans that originate from the fertile soils of Rwanda. Our farmers operates from 6 growing regions of the country making our coffee taste and flavors unique. we utilize certified growing and processing methods to ensure every bean will be a result of speciality taste.\n\nCoffee Promotion, Export and Roasting is at the heart of what we do. We are your direct origin of Rwanda's speciality coffees."
+                    },
+                    {
+                        "name": "company.email",
+                        "section": "company",
+                        "value": "info@rwashoscco.com"
+                    },
+                    {
+                        "name": "company.phone",
+                        "section": "company",
+                        "value": "+250788456614"
+                    },
+                    {
+                        "name": "company.webPage",
+                        "section": "company",
+                        "value": "http://www.rwashoscco.com"
+                    },
+                    {
+                        "name": "company.mediaLinks.facebook",
+                        "section": "company",
+                        "value": "https://web.facebook.com/rwashosccoltd/"
+                    },
+                    {
+                        "name": "company.mediaLinks.instagram",
+                        "section": "company",
+                        "value": "https://www.instagram.com/rwashoscco/?hl=fr"
+                    },
+                    {
+                        "name": "company.mediaLinks.twitter",
+                        "section": "company",
+                        "value": "https://twitter.com/rwashoscco"
+                    },
+                    {
+                        "name": "company.mediaLinks.youtube",
+                        "section": "company",
+                        "value": "https://www.youtube.com/watch?v=ChoSu1PBrwg&t=8s"
+                    },
+                    {
+                        "name": "company.mediaLinks.other",
+                        "section": "company"
+                    }
+                ]
+            }
+        ],
+        "created": "2020-09-10T08:54:54.388Z",
+        "lastChange": "2020-09-10T08:54:54.388Z"
+    }
+}

@@ -1,0 +1,53 @@
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: {organizations.org0.name}
+    Domain: {organizations.org0.domain}
+    EnableNodeOUs: true
+
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: {orderers.org0.orderer0.host}
+        SANS:
+            - "localhost"
+            - "127.0.0.1"
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org1
+  # ---------------------------------------------------------------------------
+  - Name: {organizations.org1.name}
+    Domain: {organizations.org1.domain}
+    EnableNodeOUs: true
+
+    Template:
+      Count: 1
+      # Start: 5
+      # Hostname: {{.Prefix}}{{.Index}} # default
+      SANS:
+        - "localhost"
+        - "127.0.0.1"
+
+    Users:
+      Count: 1
+
+  - Name: {organizations.org2.name}
+    Domain: {organizations.org2.domain}
+    EnableNodeOUs: true
+
+    Template:
+      Count: 1
+      # Start: 5
+      # Hostname: {{.Prefix}}{{.Index}} # default
+      SANS:
+        - "localhost"
+        - "127.0.0.1"
+
+    Users:
+      Count: 1

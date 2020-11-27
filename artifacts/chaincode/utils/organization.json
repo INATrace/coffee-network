@@ -1,0 +1,34 @@
+{
+    "_id": "0e55e3d8-218b-4cf1-a081-3b5c2febd612",
+    "_rev": "1-3b0a538fad32e58ec3675b235ad599c2",
+    "id": 21,
+    "name": "Test Company",
+    "email": "pascal.ripplinger@giz.de",
+    "about": "Test Company",
+    "phone": "0123456789",
+    "headquarters": {
+      "address": "Test Street",
+      "city": "Test City",
+      "state": "NRW",
+      "zip": "1234567",
+      "country": {
+        "id": 83,
+        "code": "DE",
+        "name": "Germany"
+      }
+    },
+    "logo": {
+      "storageKey": "c94bb4f4-76de-4a6d-a166-2fb08756787c",
+      "name": "giz-csh-kaffeefeld.jpg",
+      "contentType": "image/jpeg",
+      "size": 2731130
+    },
+    "manager": "",
+    "mediaLinks": {},
+    "webPage": "",
+    "abbreviation": "TCo",
+    "entityType": "company",
+    "created": "2020-08-12T13:23:45.825Z",
+    "lastChange": "2020-08-12T13:23:45.825Z",
+    "docType": "organization"
+  }

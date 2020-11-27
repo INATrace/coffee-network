@@ -1,0 +1,49 @@
+{
+    "name": "",
+    "version": "1",
+    "client": {
+        "organization": "Coop",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Coop": {
+            "mspid": "CoopMSP",
+            "peers": [
+                ""
+            ],
+            "certificateAuthorities": [
+                ""
+            ]
+        }
+    },
+    "peers": {
+        "": {
+            "url": "",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "",
+                "hostnameOverride": ""
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "": {
+            "url": "",
+            "caName": "",
+            "tlsCACerts": {
+                "pem": ""
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

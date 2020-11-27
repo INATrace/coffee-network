@@ -1,0 +1,11 @@
+{
+  "index": {
+    "fields": [
+      "docType",
+      "lastChange"
+    ]
+  },
+  "name": "last_change",
+  "type": "json",
+  "ddoc": "last_change"
+}

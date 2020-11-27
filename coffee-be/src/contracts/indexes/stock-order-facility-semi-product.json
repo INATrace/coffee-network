@@ -1,0 +1,13 @@
+{
+  "index": {
+    "fields": [
+      "docType",
+      "facilityId",
+      "isAvailable",
+      "semiProductId"
+    ]
+  },
+  "name": "stock_order_facility_semi_product",
+  "type": "json",
+  "ddoc": "stock_order_facility_semi_product"
+}

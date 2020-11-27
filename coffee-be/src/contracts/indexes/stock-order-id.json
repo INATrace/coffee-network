@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "stockOrderId"
+        ]
+    },
+    "name": "stock_order_id",
+    "type": "json",
+    "ddoc": "stock_order_id"
+}

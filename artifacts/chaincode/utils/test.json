@@ -1,0 +1,9 @@
+{
+    "a": 1,
+    "b": {
+        "c": "krok odil",
+        "d": null
+    },
+    "_id": "neki",
+    "_rev": "revizn"
+}

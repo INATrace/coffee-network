@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "sourceStockOrderId"
+        ]
+    },
+    "name": "output_transactions",
+    "type": "json",
+    "ddoc": "output_transactions"
+}
