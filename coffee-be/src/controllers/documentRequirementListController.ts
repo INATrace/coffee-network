@@ -1,12 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
-import { ChainSemiProduct } from "../models/chain/ChainSemiProduct";
-import { PaginatedList } from "../models/chain/PaginatedList";
-import { ChainDocumentRequirement } from "../models/chain/ChainDocumentRequirement";
 import { ChainDocumentRequirementList } from "../models/chain/ChainDocumentRequirementList";
+import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Document requirements')
 @Route("chain-api/data/document-requirement-list")
 export class DocumentRequirementListController extends Controller {
@@ -26,6 +26,7 @@ export class DocumentRequirementListController extends Controller {
      */
     @Get("list")
     public async listDocumentRequirementLists(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -41,6 +42,7 @@ export class DocumentRequirementListController extends Controller {
      */
     @Get("{dbId}")
     public async getDocumentRequirementList(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainDocumentRequirementList>> {
         return handleApiResponse(
@@ -54,6 +56,7 @@ export class DocumentRequirementListController extends Controller {
      */
     @Post('')
     public async postDocumentRequirementList(
+        @Request() request: express.Request,
         @Body() requestBody: ChainDocumentRequirementList
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -70,6 +73,7 @@ export class DocumentRequirementListController extends Controller {
      */
     @Get("list/semi-product/{semiProductId}")
     public async listDocumentRequirementListForSemiProduct (
+        @Request() request: express.Request,
         @Path() semiProductId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -86,6 +90,7 @@ export class DocumentRequirementListController extends Controller {
      */
     @Post('delete')
     public async deleteDocumentRequirementList(
+        @Request() request: express.Request,
         @Body() requestBody: ChainDocumentRequirementList
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainUser } from "../models/chain/ChainUser";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('User')
 @Route("chain-api/data/user")
 export class UserController extends Controller {
@@ -24,6 +26,7 @@ export class UserController extends Controller {
      */
     @Get("list")
     public async listUsers(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -39,6 +42,7 @@ export class UserController extends Controller {
      */
     @Get("{dbId}")
     public async getUser(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainUser>> {
         return handleApiResponse(
@@ -54,6 +58,7 @@ export class UserController extends Controller {
      */
     @Post('external/list')
     public async usersForIds(
+        @Request() request: express.Request,
         @Body() requestBody: number[]
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -67,6 +72,7 @@ export class UserController extends Controller {
      */
     @Get("external/{linkId}")
     public async getUserByAFId(
+        @Request() request: express.Request,
         @Path() linkId: number,
     ): Promise<ApiResponse<ChainUser>> {
         return handleApiResponse(
@@ -80,6 +86,7 @@ export class UserController extends Controller {
      */
     @Post('')
     public async postUser(
+        @Request() request: express.Request,
         @Body() requestBody: ChainUser
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

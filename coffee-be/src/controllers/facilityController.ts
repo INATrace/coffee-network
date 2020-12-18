@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainFacility } from "../models/chain/ChainFacility";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Facility')
 @Route("chain-api/data/facility")
 export class FacilityController extends Controller {
@@ -24,6 +26,7 @@ export class FacilityController extends Controller {
      */
     @Get("list")
     public async listFacilities(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -39,6 +42,7 @@ export class FacilityController extends Controller {
      */
     @Get("{dbId}")
     public async getFacilityById(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainFacility>> {
         return handleApiResponse(
@@ -52,6 +56,7 @@ export class FacilityController extends Controller {
      */
     @Post('')
     public async postFacility(
+        @Request() request: express.Request,
         @Body() requestBody: ChainFacility
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -68,6 +73,7 @@ export class FacilityController extends Controller {
      */
     @Get("list/organization/{organizationId}")
     public async listFacilitiesForOrganization(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Query() query?: string,
         @Query() sort?: 'ASC' | 'DESC',
@@ -89,6 +95,7 @@ export class FacilityController extends Controller {
      */
     @Get("list/organization/{organizationId}/semi-product/{semiProductId}")
     public async listFacilitiesForOrganizationAndSemiProduct(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Path() semiProductId: string,
         @Query() sort?: 'ASC' | 'DESC',
@@ -110,6 +117,7 @@ export class FacilityController extends Controller {
      */
     @Get("list/organization/{organizationId}/semi-product/{semiProductId}/selling")
     public async listSellingFacilitiesForOrganizationAndSemiProduct(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Path() semiProductId: string,
         @Query() sort?: 'ASC' | 'DESC',
@@ -130,6 +138,7 @@ export class FacilityController extends Controller {
      */
     @Get("list/collecting/organization/{organizationId}")
     public async listOfCollectingFacilitiesForOrganization(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -146,6 +155,7 @@ export class FacilityController extends Controller {
      */
     @Post('delete')
     public async deleteFacility(
+        @Request() request: express.Request,
         @Body() requestBody: ChainFacility
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

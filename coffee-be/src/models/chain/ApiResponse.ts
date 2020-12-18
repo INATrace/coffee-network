@@ -23,6 +23,16 @@ export interface ApiValidationErrorDetails {
     fieldErrors?: { [key: string]: string; };
 }
 
+function removeKey(obj: any, key: string ): any {
+    return obj !== Object(obj)
+        ? obj
+        : Array.isArray(obj)
+            ? obj.map(item => removeKey(item, key))
+            : Object.keys(obj)
+                .filter(k => k !== key)
+                .reduce((acc, x) => Object.assign(acc, { [x]: removeKey(obj[x], key) }), {});
+}
+
 export class ApiResponse<T> {
     data?: T;
     /**
@@ -39,12 +49,21 @@ export class ApiResponse<T> {
     status: ApiDefaultResponseStatusEnum;
     validationErrorDetails?: ApiValidationErrorDetails;
 
+    // constructor(data: T, status?: ApiDefaultResponseStatusEnum, errorMessage?: string, errorDetails?: any) {
+    //     this.status = status || 'OK'
+    //     this.data = data
+    //     this.errorMessage = errorMessage;
+    //     this.errorDetails = errorDetails
+    // }
+
     constructor(data: T, status?: ApiDefaultResponseStatusEnum, errorMessage?: string, errorDetails?: any) {
         this.status = status || 'OK'
-        this.data = data
+        // console.log("RK:", data, removeKey(data, "~version"))
+        this.data = removeKey(data, "~version")   // hyperledger specific
         this.errorMessage = errorMessage;
         this.errorDetails = errorDetails
     }
+
 }
 
 export function handleApiResponse<T>(action: Promise<T>): Promise<ApiResponse<T>> {

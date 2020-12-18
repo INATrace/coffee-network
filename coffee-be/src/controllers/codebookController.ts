@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
@@ -10,6 +11,7 @@ import { ChainGradeAbbreviation } from "../models/chain/ChainGradeAbbreviation";
 import { ChainProcessingEvidenceType } from "../models/chain/ChainProcessingEvidenceType";
 import { ChainOrderEvidenceType } from "../models/chain/ChainOrderEvidenceType";
 
+@Security("jwt")
 @Tags('Codebook')
 @Route("chain-api/codebook")
 export class CodebookController extends Controller {
@@ -29,6 +31,7 @@ export class CodebookController extends Controller {
      */
     @Get("action-type/list")
     public async getActionTypeList(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -44,6 +47,7 @@ export class CodebookController extends Controller {
      */
     @Get("action-type/{dbId}")
     public async getActionType(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainActionType>> {
         return handleApiResponse(
@@ -57,6 +61,7 @@ export class CodebookController extends Controller {
      */
     @Post('action-type')
     public async postActionType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainActionType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -70,6 +75,7 @@ export class CodebookController extends Controller {
      */
     @Post('action-type/delete')
     public async deleteActionType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainActionType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -90,6 +96,7 @@ export class CodebookController extends Controller {
      */
     @Get("facility-type/list")
     public async getFacilityTypeList(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -105,6 +112,7 @@ export class CodebookController extends Controller {
      */
     @Get("facility-type/{dbId}")
     public async getFacilityType(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainFacilityType>> {
         return handleApiResponse(
@@ -118,6 +126,7 @@ export class CodebookController extends Controller {
      */
     @Post('facility-type')
     public async postFacilityType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainFacilityType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -131,6 +140,7 @@ export class CodebookController extends Controller {
      */
     @Post('facility-type/delete')
     public async deleteFacilityType (
+        @Request() request: express.Request,
         @Body() requestBody: ChainFacilityType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -150,6 +160,7 @@ export class CodebookController extends Controller {
      */
     @Get("measure-unit-type/list")
     public async getMeasureUnitTypeList(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -165,6 +176,7 @@ export class CodebookController extends Controller {
      */
     @Get("measure-unit-type/{dbId}")
     public async getMeasureUnitType(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainMeasureUnitType>> {
         return handleApiResponse(
@@ -178,6 +190,7 @@ export class CodebookController extends Controller {
      */
     @Post('measure-unit-type')
     public async postMeasureUnitType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainMeasureUnitType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -191,6 +204,7 @@ export class CodebookController extends Controller {
      */
     @Post('measure-unit-type/delete')
     public async deleteMeasureUnitType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainMeasureUnitType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -260,6 +274,7 @@ export class CodebookController extends Controller {
      */
     @Get("grade-abbreviation/list")
     public async getGradeAbbreviationList(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -275,6 +290,7 @@ export class CodebookController extends Controller {
      */
     @Get("grade-abbreviation/{dbId}")
     public async getGradeAbbreviation(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainGradeAbbreviation>> {
         return handleApiResponse(
@@ -288,6 +304,7 @@ export class CodebookController extends Controller {
      */
     @Post('grade-abbreviation')
     public async postGradeAbbreviation(
+        @Request() request: express.Request,
         @Body() requestBody: ChainGradeAbbreviation
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -301,6 +318,7 @@ export class CodebookController extends Controller {
      */
     @Post('grade-abbreviation/delete')
     public async deleteGradeAbbreviation(
+        @Request() request: express.Request,
         @Body() requestBody: ChainGradeAbbreviation
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -321,6 +339,7 @@ export class CodebookController extends Controller {
      */
     @Get("processing-evidence-type/list")
     public async getProcessingEvidenceTypeList(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -336,6 +355,7 @@ export class CodebookController extends Controller {
      */
     @Get("processing-evidence-type/{dbId}")
     public async getProcessingEvidenceType(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainProcessingEvidenceType>> {
         return handleApiResponse(
@@ -349,6 +369,7 @@ export class CodebookController extends Controller {
      */
     @Post('processing-evidence-type')
     public async postProcessingEvidenceType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProcessingEvidenceType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -362,6 +383,7 @@ export class CodebookController extends Controller {
      */
     @Post('processing-evidence-type/delete')
     public async deleteProcessingEvidenceType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProcessingEvidenceType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -382,6 +404,7 @@ export class CodebookController extends Controller {
      */
     @Get("order-evidence-type/list")
     public async getOrderEvidenceTypeList(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -397,6 +420,7 @@ export class CodebookController extends Controller {
      */
     @Get("order-evidence-type/{dbId}")
     public async getOrderEvidenceType(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainOrderEvidenceType>> {
         return handleApiResponse(
@@ -410,6 +434,7 @@ export class CodebookController extends Controller {
      */
     @Post('order-evidence-type')
     public async postOrderEvidenceType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainOrderEvidenceType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -423,6 +448,7 @@ export class CodebookController extends Controller {
      */
     @Post('order-evidence-type/delete')
     public async deleteOrderEvidenceType(
+        @Request() request: express.Request,
         @Body() requestBody: ChainOrderEvidenceType
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -432,6 +458,7 @@ export class CodebookController extends Controller {
 
     @Get("translation-templates")
     public async getTranslationTemplates(
+        @Request() request: express.Request,
     ): Promise<string> {
 
         const res = await this.chaincode.codebookTranslationTemplates()

@@ -3,6 +3,7 @@ import { DBDocument, DocType, ForeignKeyScheme, TimeStamped } from "./DBDocument
 import { ChainOrganization } from "./ChainOrganization";
 import { ChainUserCustomer } from "./ChainUserCustomer";
 import { ChainBulkPayment } from "./ChainBulkPayment";
+import { ChainCompanyCustomer } from "./ChainCompanyCustomer";
 
 /**
  * Chain payment
@@ -35,7 +36,7 @@ export interface ChainPayment extends DocType, TimeStamped {
     /**
      *  Order for which payment was done (when payment purpose is second_installment aka member bonus).
      */
-    orderId: string;
+    orderId?: string;
     /**
      * Reference to (input) transactions for which payment was actually done.
      */
@@ -122,7 +123,7 @@ export interface ChainPayment extends DocType, TimeStamped {
     /**
      * Recipient user customer. Not stored. On write _id is used.
      */
-    recipientCompanyCustomer?: ChainUserCustomer;
+    recipientCompanyCustomer?: ChainCompanyCustomer;
     /**
      * Bank transfer. Not stored. On write _id is used.
      */

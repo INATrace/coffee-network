@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
@@ -6,6 +7,7 @@ import { ChainProductOrder } from "../models/chain/ChainProductOrder";
 import { ProcessingOrderHistory, QuoteRequirementConfirmation, QuoteRequirementConfirmationsWithMetaData } from "../models/chain/ChainStockOrder";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Order')
 @Route("chain-api/data/order")
 export class OrderController extends Controller {
@@ -19,6 +21,7 @@ export class OrderController extends Controller {
 
     @Get("facility/{facilityId}/list-open")
     public async listOpenOrdersForFacility(
+        @Request() request: express.Request,
         @Path() facilityId: string,
         @Query() openOnly?: boolean,
         @Query() sort?: 'ASC' | 'DESC',
@@ -33,6 +36,7 @@ export class OrderController extends Controller {
 
     @Get("organization/{organizationId}/list-open")
     public async listOpenOrdersForOrganization(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Query() openOnly?: boolean,
         @Query() sort?: 'ASC' | 'DESC',
@@ -47,6 +51,7 @@ export class OrderController extends Controller {
 
     @Get("aggregates-for-order/{orderId}")
     public async getAggregatesForOrder(
+        @Request() request: express.Request,
         @Path() orderId: string,
     ): Promise<ApiResponse<ProcessingOrderHistory[]>> {
         return handleApiResponse(
@@ -56,6 +61,7 @@ export class OrderController extends Controller {
 
     @Get("quote-requrements-verify-for-order/{orderId}")
     public async getQuoteRequirementsVerification(
+        @Request() request: express.Request,
         @Path() orderId: string,
     ): Promise<ApiResponse<QuoteRequirementConfirmationsWithMetaData>> {
         return handleApiResponse(
@@ -69,6 +75,7 @@ export class OrderController extends Controller {
      */
     @Get("{dbId}")
     public async getOrder(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainProductOrder>> {
         return handleApiResponse(
@@ -82,6 +89,7 @@ export class OrderController extends Controller {
      */
     @Post('')
     public async postOrder(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProductOrder
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -95,6 +103,7 @@ export class OrderController extends Controller {
      */
     @Post('delete')
     public async deleteOrder(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProductOrder
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

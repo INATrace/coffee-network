@@ -3,10 +3,19 @@ import { DatabaseService } from "../../services/databaseService";
 import { PaginatedList } from "./PaginatedList";
 import { v4 as uuid } from 'uuid';
 
+// export interface DocType {
+//     docType?: string | null;
+//     _id?: string | null;
+//     _rev?: string | null;
+// }
+
 export interface DocType {
     docType?: string | null;
     _id?: string | null;
     _rev?: string | null;
+    // hyperledger fields
+    dbKey?: string | null;
+    mode__?: 'insert' | 'insert_as_is' | 'update';
 }
 
 export interface TimeStamped {
@@ -185,7 +194,7 @@ export class DBDocument<T> implements MaybeDocument, DocType {
         return dbService.writeDatabase.destroy(this._id, this._rev)
     }
 
-    private dbKey(id: any): string {
+    private getDbKey(id: any): string {
         if (id == null) throw Error("id key must not be null.")
         // return this._prefix + id
         return id;
@@ -195,7 +204,7 @@ export class DBDocument<T> implements MaybeDocument, DocType {
         // if(!this.docType) throw Error("No database name")
         // const db = dbService.connection.db.use(this.docType);
         const db = writeDatabase ? dbService.writeDatabase : dbService.readDatabase
-        const response = await db.get(this.dbKey(id))
+        const response = await db.get(this.getDbKey(id))
         Object.assign(this, response)
         return this
     }
@@ -203,7 +212,7 @@ export class DBDocument<T> implements MaybeDocument, DocType {
     public async cRead(dbService: DatabaseService, id: any): Promise<DBDocument<T>> {
         // if(!this.docType) throw Error("No database name")
         // const db = dbService.connection.db.use(this.docType);
-        const response = await dbService.writeDatabase.get(this.dbKey(id))
+        const response = await dbService.writeDatabase.get(this.getDbKey(id))
         Object.assign(this, response)
         return this
     }

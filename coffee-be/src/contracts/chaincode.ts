@@ -1,4 +1,5 @@
 import { Transaction } from "fabric-network";
+import { DocumentListParams } from "nano";
 import { Factory, Inject, Singleton } from "typescript-ioc";
 import { v4 as uuid } from 'uuid';
 import { OrderController } from "../controllers/orderController";
@@ -270,7 +271,8 @@ export class ChainCode {
     @Inject
     public bcService: BlockchainService
 
-    timestamp(obj: any) {
+    timestamp(obj: any, leaveAsIs = false) {
+        if (leaveAsIs) return null
         return {
             created: (obj.created ? obj.created : (new Date()).toISOString()) as string,
             lastChange: (new Date()).toISOString()
@@ -291,20 +293,37 @@ export class ChainCode {
         return null
     }
 
-    extractOrGenerateKey(obj: any) {
-        if (obj.dbKey) return obj.dbKey
-        if (obj._id) return obj._id
-        return uuid()
+    extractOrGenerateKey(obj: any, strict = true) {
+        if (obj.dbKey) return { dbKey: obj.dbKey }
+        if (!strict && obj._id) return { dbKey: obj._id }
+        return { dbKey: uuid() }
     }
 
     mode(obj: any) {
+        if (obj.mode__) {
+            const mode = obj.mode__
+            if (['insert', 'update'].indexOf(mode) >= 0) return mode
+            if (mode === 'insert_as_is') return 'insert'
+        }
         const key = this.extractKey(obj)
         if (key) return "update"
         return "insert"
     }
 
     prepareForSave(obj: any): any {
-        return { ...obj, ...this.timestamp(obj), dbKey: this.extractOrGenerateKey(obj) }
+        const leaveAsIs = obj.mode__ === 'insert_as_is'
+        const tmp = {
+            ...obj,
+            ...this.timestamp(obj, leaveAsIs),
+            ...this.extractOrGenerateKey(obj, false)
+        }
+        // strip hyperledger specific keys
+        delete tmp["~version"]
+        delete tmp.mode__
+        delete tmp._id
+        delete tmp._rev
+        delete tmp.mode__
+        return tmp
     }
 
     async insertOrUpdateBC(asset: any) {
@@ -322,6 +341,149 @@ export class ChainCode {
 
     applyRevFromLastVersion(item: any, lastVersionItem: any) {
         item._rev = lastVersionItem._rev
+    }
+
+    docTypeHierarchy: string[] = [
+        // "c_process_evidence_type",
+        // "c_grade_abbreviation",
+        // "c_measure_unit_type",
+        // "c_action_type",
+        // "c_facility_type",
+        // "user_company_customer_counter",
+        // "user",
+        // "organization",
+        // "product",
+        // "semi_product",
+        // "facility",
+        // "process_action",
+        // "user_customer",
+        // "company_customer",
+        // "processing_order",
+        "stock_order",
+        // "payment",
+        // "transaction",
+        // "order"
+    ]
+
+    docTypeInsertMethods: any = {
+        "c_process_evidence_type": (obj: any) => this.insertProcessingEvidenceType(obj),
+        "c_grade_abbreviation": (obj: any) => this.insertGradeAbbreviation(obj),
+        "c_measure_unit_type": (obj: any) => this.insertMeasureUnitType(obj),
+        "c_action_type": (obj: any) => this.insertActionType(obj),
+        "c_facility_type": (obj: any) => this.insertFacilityType(obj),
+        "user_company_customer_counter": (obj: any) => this.insertFacilityType(obj),
+        "user": (obj: any) => this.insertUser(obj),
+        "organization": (obj: any) => this.insertOrganization(obj),
+        "product": (obj: any) => this.insertProduct(obj),
+        "semi_product": (obj: any) => this.insertSemiProduct(obj),
+        "facility": (obj: any) => this.insertFacility(obj),
+        "process_action": (obj: any) => this.insertProcessingAction(obj),
+        "user_customer": (obj: any) => this.insertUserCustomer(obj),
+        "company_customer": (obj: any) => this.insertCompanyCustomer(obj),
+        "stock_order": (obj: any) => this.insertStockOrder(obj),
+        "processing_order": (obj: any) => this.insertProcessingOrder(obj),
+        "payment": (obj: any) => this.insertPayment(obj),
+        "transaction": (obj: any) => this.insertTransaction(obj),
+        "order": (obj: any) => this.insertOrder(obj)
+    }
+
+    prepareObjectForMigration(value: any) {
+        const newVal = {
+            ...value
+        }
+        newVal.mode__ = "insert_as_is"
+        return newVal
+    }
+
+    public async copyDB() {
+        let offset = 0;
+        let count = -1;
+        const limit = 3000;
+        let allObjects: any[] = []
+        while (count < 0 || offset < count) {
+            // console.log("XX", offset, limit, count, allObjects.length)
+            const res = await this.dbService.writeDatabase.list({ limit, offset, include_docs: true } as DocumentListParams)
+            count = res.total_rows
+            offset += limit
+            // console.log("YY", offset, limit, count, res.rows.length, allObjects.length)
+            allObjects = [...allObjects, ...(res.rows.map(x => x.doc).filter(x => !x._id.startsWith("_")))]
+            // allObjects = [...allObjects, ...(res.rows.map(x => {
+            //     return x.doc._id
+            // }))]
+        }
+        const docTypeMap = new Map<string, any>()
+        allObjects.forEach(x => {
+            const docType = x.docType
+            const value = docTypeMap.get(docType) || []
+            value.push(x)
+            docTypeMap.set(docType, value)
+        })
+        let responses: any[] = []
+        for (const docType of this.docTypeHierarchy) {
+            const values = docTypeMap.get(docType) as any[]
+            const insertFunction = this.docTypeInsertMethods[docType]
+            const t0 = (new Date()).getTime()
+
+            let subOffset = 0;
+            const subLimit = 1;
+            while (subOffset < values.length) {
+                const vals = values.slice(subOffset, subOffset + subLimit)
+                const resps = await Promise.all(vals.map(async (value) => {
+                    const valueFix = this.prepareObjectForMigration(value)
+                    let status = "DONE"
+                    console.log(valueFix._id, valueFix.docType, docType, insertFunction)
+                    const res = await insertFunction(valueFix).catch((e: any) => {
+                        if(e.responses && e.responses.length > 0) {
+                            status = e.responses[0].response.message
+                        } else {
+                            status = '' + e
+                        }
+
+                    })
+                    return {
+                        id: value._id,
+                        response: status
+                    }
+                }))
+                const t1 = (new Date()).getTime()
+                console.log("OK", t1 - t0)
+                responses = [...responses, ...resps]
+                subOffset += subLimit;
+                console.log("OFFSET:", subOffset, vals.length, values.length)
+                // if(subOffset > 50)
+                // break;
+            }
+            // for (const value of values) {
+            //     // SEQUENTIAL
+            //     const valueFix = this.prepareObjectForMigration(value)
+            //     const t0 = (new Date()).getTime()
+            //     let status = "DONE"
+            //     console.log(valueFix._id, valueFix.docType, docType, insertFunction)
+            //     // try {
+            //         const res = await insertFunction(valueFix).catch((e: any) => {
+            //             console.log("ERRRRRRRORRR", e)
+            //             status = e.responses[0].response.message
+            //             // return e.message
+            //             // let message = e.message
+            //             // console.log(typeof message)
+            //             // if(message.indexOf("Object already exists. Insert not possible") >= 0) console.log("exists")
+            //             // else {
+            //             //     console.log(e.message)
+            //             // }
+            //             //
+            //         })
+            //     // } catch (e) {
+            //     //     console.log("2ROR")
+            //     // }
+            //     const t1 = (new Date()).getTime()
+            //     console.log("OK", t1 - t0, status)
+            //     responses.push({
+            //         id: value._id,
+            //         response: status
+            //     })
+            // }
+        }
+        return responses
     }
 
     //////////////////////////////////////////////////////////
@@ -523,6 +685,7 @@ export class ChainCode {
         const newProduct = { ...product, ...this.timestamp(product) } as ChainProduct;
         if (newProduct.companyId != null) {
             const organization = await this.getOrganizationByCompanyId(newProduct.companyId);
+            console.log("organiz", organization)
             newProduct.organizationId = organization._id
         }
         if (this.isNodeApp) {
@@ -710,7 +873,7 @@ export class ChainCode {
             return getResponseValue(org.save(this.dbService));
         }
         if (this.isBlockchainApp) {
-            this.insertOrUpdateBC(semiProduct)
+            return this.insertOrUpdateBC(semiProduct)
         }
     }
 
@@ -904,7 +1067,7 @@ export class ChainCode {
             return getResponseValue(org.save(this.dbService));
         }
         if (this.isBlockchainApp) {
-            this.insertOrUpdateBC(newCustomer)
+            return this.insertOrUpdateBC(newCustomer)
         }
     }
 
@@ -1216,7 +1379,7 @@ export class ChainCode {
                     newStockOrder.availableQuantity = newStockOrder.fullfilledQuantity - outputQuantity
                 }
                 if (newStockOrder.availableQuantity < 0) throw Error("Negative stock availability")
-                if (newStockOrder.fullfilledQuantity < newStockOrder.availableQuantity) throw Error(`Too big available quantity (${newStockOrder.availableQuantity}) in regard to fullfilmentQuantity (${newStockOrder.fullfilledQuantity})`)
+                if (newStockOrder.fullfilledQuantity < newStockOrder.availableQuantity) throw Error(`Too big available quantity (${ newStockOrder.availableQuantity }) in regard to fullfilmentQuantity (${ newStockOrder.fullfilledQuantity })`)
             }
 
             // auto settings
@@ -1571,7 +1734,7 @@ export class ChainCode {
         if (filters) {
             if (filters.sortBy) {
                 sort = [];
-                const sortBy = `doc.${filters.sortBy}`;
+                const sortBy = `doc.${ filters.sortBy }`;
                 if (filters.sort) {
                     const order = filters.sort === 'DESC' ? "desc" : "asc";
                     sort.push({ sortBy: order });
@@ -1588,7 +1751,7 @@ export class ChainCode {
         }
 
         const result = await this.elasticsearchService.search({
-            index: `index_${docType}`,
+            index: `index_${ docType }`,
             body: {
                 query,
                 sort,
@@ -1978,17 +2141,17 @@ export class ChainCode {
 
         const facilityOrOrganization = mode === 'facility' ? 'quote_facility' : 'quote_organization'
         const sortBySuffix = filters && filters.sortBy === 'deliveryTime' ? 'delivery_time' : (filters && filters.sortBy === 'productionDate' ? 'production_date' : 'last_change')
-        let view = `stock_order_by_${facilityOrOrganization}_with_` + sortBySuffix
+        let view = `stock_order_by_${ facilityOrOrganization }_with_` + sortBySuffix
         if (openOnly) {
-            view = `stock_order_by_${facilityOrOrganization}_by_open_quote_with_` + sortBySuffix
+            view = `stock_order_by_${ facilityOrOrganization }_by_open_quote_with_` + sortBySuffix
             startkeyDef.push('1')
             endkeyDef.push('1')
         }
         if (semiProductId) {
             if (openOnly) {
-                view = `stock_order_by_${facilityOrOrganization}_by_open_quote_by_semi_product_with_` + sortBySuffix
+                view = `stock_order_by_${ facilityOrOrganization }_by_open_quote_by_semi_product_with_` + sortBySuffix
             } else {
-                view = `stock_order_by_${facilityOrOrganization}_by_semi_product_with_` + sortBySuffix
+                view = `stock_order_by_${ facilityOrOrganization }_by_semi_product_with_` + sortBySuffix
             }
             startkeyDef.push(semiProductId)
             endkeyDef.push(semiProductId)
@@ -3498,7 +3661,7 @@ export class ChainCode {
                 if (trLen !== soLen) throw Error("Number of input transactions must match number of target orders")
                 for (let i = 0; i < trLen; i++) {
                     if (procOrder.targetStockOrders[i]._id) {
-                        if (transactions[i].targetStockOrderId !== procOrder.targetStockOrders[i]._id) throw Error(`Transaction on index ${i} does not match to target order ${procOrder.targetStockOrders[i]._id}`)
+                        if (transactions[i].targetStockOrderId !== procOrder.targetStockOrders[i]._id) throw Error(`Transaction on index ${ i } does not match to target order ${ procOrder.targetStockOrders[i]._id }`)
                     }
                     (transactions[i] as any).__position = i;
                 }
@@ -3709,17 +3872,13 @@ export class ChainCode {
 
 
     async getSeasonalStatisticsForOrganization(organizationId: string, fromDate: string, toDate: string, specificOrder: string): Promise<any> {
-        let sum = 0;
-        const stockOrderList = await this.listAllStockOrdersForOrganization(organizationId, true, null, null, null, null, "2020-01-01", "2020-12-31", null, { limit: 1000 });
-        if (stockOrderList && stockOrderList.items) {
-            sum = stockOrderList.items.map(o => o.totalQuantity).reduce((a, c) => a + c);
-        }
         let ordersTotal = 0;
         let advancedPayment = 0;
         let cherryPayment = 0;
         let bonusPayment = 0;
         let premiumPayment = 0;
         let checkedStockOrderList: string[] = [];
+        let productionDate = null;
 
         if (specificOrder) {
             const res = await this.getSeasonalPartialresults(specificOrder, checkedStockOrderList);
@@ -3729,6 +3888,7 @@ export class ChainCode {
             cherryPayment += res.cherryPayment;
             bonusPayment += res.bonusPayment;
             premiumPayment += res.premiumPayment;
+            if (productionDate === null) productionDate = res.productionDate;
         } else {
             const quoteOrders = await this.listOpenQuoteOrders(organizationId, null, false, { sort: null, limit: 1000, offset: 0, sortBy: 'productionDate' }, 'organization', fromDate, toDate);
             if (quoteOrders && quoteOrders.items) {
@@ -3740,8 +3900,18 @@ export class ChainCode {
                     cherryPayment += res.cherryPayment;
                     bonusPayment += res.bonusPayment;
                     premiumPayment += res.premiumPayment;
+                    if (productionDate === null) productionDate = res.productionDate;
                 }
             }
+        }
+        let sum = 0;
+        if (productionDate && productionDate.length >= 4) {
+            const year = productionDate.substring(0, 4);
+            const stockOrderList = await this.listAllStockOrdersForOrganization(organizationId, true, null, null, null, null, year+"-01-01", year+"-12-31", null, { limit: 1000 });
+            if (stockOrderList && stockOrderList.items) {
+                sum = stockOrderList.items.map(o => o.totalQuantity).reduce((a, c) => a + c);
+            }
+
         }
         return { totalSeason: sum, totalOrder: ordersTotal, paymentAdvanced: advancedPayment, paymentCherry: cherryPayment, paymentBonus: bonusPayment, paymentPremium: premiumPayment };
     }
@@ -3752,12 +3922,14 @@ export class ChainCode {
         let cherryPayment = 0;
         let bonusPayment = 0;
         let premiumPayment = 0;
+        let productionDate = null;
         const resAgg = await this.aggregatesForStockOrderId(soId);
         if (resAgg) {
             const len = resAgg.length;
             for (const so of resAgg[len - 1].stockOrderAggs) {
                 if (checkedStockOrderList.includes(so.stockOrder._id)) continue;
                 checkedStockOrderList.push(so.stockOrder._id)
+                if (productionDate === null) productionDate = so.stockOrder.productionDate;
                 const resPayments = await this.listPaymentsForStockOrder(so.stockOrder._id);
                 if (resPayments && resPayments.items) {
                     for (const pay of resPayments.items) {
@@ -3775,7 +3947,7 @@ export class ChainCode {
                 ordersTotal += so.stockOrder.totalQuantity;
             }
         }
-        return { checkedStockOrderList, cherryPayment, bonusPayment, advancedPayment, premiumPayment, ordersTotal }
+        return { checkedStockOrderList, cherryPayment, bonusPayment, advancedPayment, premiumPayment, ordersTotal, productionDate }
     }
 
     //////////////////////////////////////////////////////////
@@ -4946,8 +5118,8 @@ export class ChainCode {
 
     private translationEntry(obj: any, field: string, prefixKey: string) {
         const value = obj[field]
-        const trxKey = `CBT_${obj._id}.${field}`
-        return `"${trxKey}": $localize \`:@@${prefixKey}.${trxKey}: ${value}\`,\n`
+        const trxKey = `CBT_${ obj._id }.${ field }`
+        return `"${ trxKey }": $localize \`:@@${ prefixKey }.${ trxKey }: ${ value }\`,\n`
     }
 
     /// ADD FIELDS TO BE TRANSLATED INTO THIS STRUCTURE
@@ -4991,13 +5163,13 @@ export class ChainCode {
         const indent2 = indent + indent
         const indent3 = indent2 + indent
         for (const objectKey of Object.keys(this.codebookFieldsForTranslation)) {
-            outString += indent + `"${objectKey}": {\n`
+            outString += indent + `"${ objectKey }": {\n`
             dbObj.docType = objectKey
             const codebookObjects = (await dbObj.readAll(this.dbService)).items
             for (const fieldName of Object.keys((this.codebookFieldsForTranslation as any)[objectKey])) {
-                outString += indent2 + `"${fieldName}": {\n`
+                outString += indent2 + `"${ fieldName }": {\n`
                 for (const obj of codebookObjects) {
-                    outString += indent3 + this.translationEntry(obj, fieldName, `codebookTranslations.${objectKey}.${fieldName}`)
+                    outString += indent3 + this.translationEntry(obj, fieldName, `codebookTranslations.${ objectKey }.${ fieldName }`)
                 }
                 outString += indent2 + "},\n"
             }
@@ -5105,9 +5277,13 @@ export class ChainCode {
             org.save(this.dbService);
         }
         if (this.isBlockchainApp) {
-            this.insertOrUpdateBC(newCounter)
+            return this.insertOrUpdateBC(newCounter)
         }
 
+    }
+
+    public async checkConnection() {
+        return "";
     }
 
     //////////////////////////////////////////////////////////

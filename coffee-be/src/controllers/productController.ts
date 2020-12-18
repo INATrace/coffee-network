@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainProduct } from "../models/chain/ChainProduct";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Product')
 @Route("chain-api/data/product")
 export class ProductController extends Controller {
@@ -24,6 +26,7 @@ export class ProductController extends Controller {
      */
     @Get("list")
     public async listProducts(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -42,6 +45,7 @@ export class ProductController extends Controller {
      */
     @Get("list/organization/{organizationId}")
     public async listProductsForOrganization(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -58,6 +62,7 @@ export class ProductController extends Controller {
      */
     @Get("{dbId}")
     public async getProduct(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainProduct>> {
         return handleApiResponse(
@@ -71,6 +76,7 @@ export class ProductController extends Controller {
      */
     @Get("external/{linkId}")
     public async getProductByAFId(
+        @Request() request: express.Request,
         @Path() linkId: number,
     ): Promise<ApiResponse<ChainProduct>> {
         return handleApiResponse(
@@ -86,6 +92,7 @@ export class ProductController extends Controller {
      */
     @Post('external/list')
     public async productsForIds(
+        @Request() request: express.Request,
         @Body() requestBody: number[]
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -99,6 +106,7 @@ export class ProductController extends Controller {
      */
     @Post('')
     public async postProduct(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProduct
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -112,6 +120,7 @@ export class ProductController extends Controller {
      */
     @Post('delete')
     public async deleteProduct(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProduct
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

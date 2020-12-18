@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
@@ -6,6 +7,7 @@ import { ChainSemiProduct } from "../models/chain/ChainSemiProduct";
 import { PaginatedList } from "../models/chain/PaginatedList";
 import { ChainDocumentRequirement } from "../models/chain/ChainDocumentRequirement";
 
+@Security("jwt")
 @Tags('Document requirements')
 @Route("chain-api/data/document-requirement")
 export class DocumentRequirementController extends Controller {
@@ -25,6 +27,7 @@ export class DocumentRequirementController extends Controller {
      */
     @Get("list")
     public async listDocumentRequirements(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -40,6 +43,7 @@ export class DocumentRequirementController extends Controller {
      */
     @Get("{dbId}")
     public async getDocumentRequirement(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainDocumentRequirement>> {
         return handleApiResponse(
@@ -53,6 +57,7 @@ export class DocumentRequirementController extends Controller {
      */
     @Post('')
     public async postDocumentRequirement(
+        @Request() request: express.Request,
         @Body() requestBody: ChainDocumentRequirement
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -66,6 +71,7 @@ export class DocumentRequirementController extends Controller {
      */
     @Post('delete')
     public async deleteDocumentRequirement(
+        @Request() request: express.Request,
         @Body() requestBody: ChainDocumentRequirement
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

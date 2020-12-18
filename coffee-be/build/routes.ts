@@ -40,6 +40,7 @@ import { TransactionController } from './../src/controllers/transactionControlle
 import { UserController } from './../src/controllers/userController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserCustomerController } from './../src/controllers/userCustomerController';
+import { expressAuthentication } from './../authentication';
 import { iocContainer } from './../src/ioc';
 import * as express from 'express';
 
@@ -93,6 +94,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -111,6 +114,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "id": { "dataType": "string", "required": true },
             "label": { "dataType": "string", "required": true },
             "weight": { "dataType": "union", "subSchemas": [{ "dataType": "double" }, { "dataType": "enum", "enums": [null] }] },
@@ -126,6 +131,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "storageKey": { "dataType": "string", "required": true },
             "name": { "dataType": "string", "required": true },
             "contentType": { "dataType": "string", "required": true },
@@ -166,6 +173,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "name": { "dataType": "string", "required": true },
             "description": { "dataType": "string", "required": true },
             "documentIdentifier": { "dataType": "string", "required": true },
@@ -207,6 +216,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "id": { "dataType": "string", "required": true },
             "label": { "dataType": "string", "required": true },
             "facilityId": { "dataType": "string" },
@@ -252,6 +263,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -390,6 +403,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -421,6 +436,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -443,6 +460,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "id": { "dataType": "string", "required": true },
             "label": { "dataType": "string", "required": true },
         },
@@ -465,6 +484,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -533,6 +554,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -564,6 +587,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "id": { "dataType": "string", "required": true },
             "label": { "dataType": "string", "required": true },
         },
@@ -576,6 +601,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -680,6 +707,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -729,6 +758,12 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
+            "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "userChangedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "id": { "dataType": "string", "required": true },
             "label": { "dataType": "string", "required": true },
             "type": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["DOCUMENT"] }, { "dataType": "enum", "enums": ["FIELD"] }, { "dataType": "enum", "enums": ["CALCULATED"] }] },
@@ -748,6 +783,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -781,6 +818,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -819,6 +858,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -847,6 +888,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -1231,6 +1274,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "id": { "dataType": "string", "required": true },
             "label": { "dataType": "string", "required": true },
             "fairness": { "dataType": "union", "subSchemas": [{ "dataType": "boolean" }, { "dataType": "enum", "enums": [null] }] },
@@ -1468,6 +1513,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -1486,6 +1533,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -1515,6 +1564,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -1525,7 +1576,7 @@ const models: TsoaRoute.Models = {
             "amount": { "dataType": "double", "required": true },
             "amountPaidToTheCollector": { "dataType": "double" },
             "stockOrderId": { "dataType": "string", "required": true },
-            "orderId": { "dataType": "string", "required": true },
+            "orderId": { "dataType": "string" },
             "transactionIds": { "dataType": "array", "array": { "dataType": "string" } },
             "payingOrganizationId": { "dataType": "string", "required": true },
             "recipientOrganizationId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -1546,7 +1597,7 @@ const models: TsoaRoute.Models = {
             "payingOrganization": { "ref": "ChainOrganization" },
             "recipientOrganization": { "ref": "ChainOrganization" },
             "recipientUserCustomer": { "ref": "ChainUserCustomer" },
-            "recipientCompanyCustomer": { "ref": "ChainUserCustomer" },
+            "recipientCompanyCustomer": { "ref": "ChainCompanyCustomer" },
             "bankTransfer": { "ref": "ChainBulkPayment" },
             "representativeOfRecipientOrganization": { "ref": "ChainOrganization" },
             "representativeOfRecipientUserCustomer": { "ref": "ChainUserCustomer" },
@@ -1863,6 +1914,8 @@ const models: TsoaRoute.Models = {
             "docType": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_id": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "_rev": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "dbKey": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
+            "mode__": { "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["insert"] }, { "dataType": "enum", "enums": ["insert_as_is"] }, { "dataType": "enum", "enums": ["update"] }] },
             "created": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "lastChange": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
             "userCreatedId": { "dataType": "union", "subSchemas": [{ "dataType": "string" }, { "dataType": "enum", "enums": [null] }] },
@@ -1972,8 +2025,10 @@ export function RegisterRoutes(app: express.Express) {
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
     app.get('/chain-api/data/order/facility/:facilityId/list-open',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityId: { "in": "path", "name": "facilityId", "required": true, "dataType": "string" },
                 openOnly: { "in": "query", "name": "openOnly", "dataType": "boolean" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -2002,8 +2057,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/order/organization/:organizationId/list-open',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 openOnly: { "in": "query", "name": "openOnly", "dataType": "boolean" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -2032,8 +2089,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/order/aggregates-for-order/:orderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 orderId: { "in": "path", "name": "orderId", "required": true, "dataType": "string" },
             };
 
@@ -2057,8 +2116,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/order/quote-requrements-verify-for-order/:orderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 orderId: { "in": "path", "name": "orderId", "required": true, "dataType": "string" },
             };
 
@@ -2082,8 +2143,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/order/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2107,8 +2170,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/order',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProductOrder" },
             };
 
@@ -2132,8 +2197,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/order/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProductOrder" },
             };
 
@@ -2157,8 +2224,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/processing-order/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2184,8 +2253,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/processing-order/facility/:facilityId/all',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityId: { "in": "path", "name": "facilityId", "required": true, "dataType": "string" },
                 query: { "in": "query", "name": "query", "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -2213,8 +2284,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/processing-order/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2238,8 +2311,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/processing-order',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProcessingOrder" },
             };
 
@@ -2263,8 +2338,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/processing-order/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProcessingOrder" },
             };
 
@@ -2288,8 +2365,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/action-type/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2315,8 +2394,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/action-type/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2340,8 +2421,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/action-type',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainActionType" },
             };
 
@@ -2365,8 +2448,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/action-type/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainActionType" },
             };
 
@@ -2390,8 +2475,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/facility-type/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2417,8 +2504,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/facility-type/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2442,8 +2531,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/facility-type',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainFacilityType" },
             };
 
@@ -2467,8 +2558,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/facility-type/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainFacilityType" },
             };
 
@@ -2492,8 +2585,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/measure-unit-type/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2519,8 +2614,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/measure-unit-type/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2544,8 +2641,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/measure-unit-type',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainMeasureUnitType" },
             };
 
@@ -2569,8 +2668,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/measure-unit-type/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainMeasureUnitType" },
             };
 
@@ -2594,8 +2695,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/grade-abbreviation/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2621,8 +2724,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/grade-abbreviation/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2646,8 +2751,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/grade-abbreviation',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainGradeAbbreviation" },
             };
 
@@ -2671,8 +2778,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/grade-abbreviation/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainGradeAbbreviation" },
             };
 
@@ -2696,8 +2805,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/processing-evidence-type/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2723,8 +2834,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/processing-evidence-type/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2748,8 +2861,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/processing-evidence-type',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProcessingEvidenceType" },
             };
 
@@ -2773,8 +2888,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/processing-evidence-type/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProcessingEvidenceType" },
             };
 
@@ -2798,8 +2915,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/order-evidence-type/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2825,8 +2944,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/order-evidence-type/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2850,8 +2971,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/order-evidence-type',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainOrderEvidenceType" },
             };
 
@@ -2875,8 +2998,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/codebook/order-evidence-type/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainOrderEvidenceType" },
             };
 
@@ -2900,8 +3025,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/codebook/translation-templates',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2924,8 +3051,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/company-customer/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -2951,8 +3080,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/company-customer/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -2976,8 +3107,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/company-customer/external/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "dataType": "double" } },
             };
 
@@ -3001,8 +3134,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/company-customer/external/:linkId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 linkId: { "in": "path", "name": "linkId", "required": true, "dataType": "double" },
             };
 
@@ -3026,8 +3161,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/company-customer',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainCompanyCustomer" },
             };
 
@@ -3051,8 +3188,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/company-customer/list/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -3079,8 +3218,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/company-customer/list/product/:productId/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 productId: { "in": "path", "name": "productId", "required": true, "dataType": "string" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -3108,8 +3249,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/company-customer/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainCompanyCustomer" },
             };
 
@@ -3133,6 +3276,7 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/document/upload',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
@@ -3158,6 +3302,7 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/document/download/:storageKey',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
@@ -3184,8 +3329,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/document-requirement/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -3211,8 +3358,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/document-requirement/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -3236,8 +3385,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/document-requirement',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainDocumentRequirement" },
             };
 
@@ -3261,8 +3412,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/document-requirement/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainDocumentRequirement" },
             };
 
@@ -3286,8 +3439,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/document-requirement-list/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -3313,8 +3468,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/document-requirement-list/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -3338,8 +3495,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/document-requirement-list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainDocumentRequirementList" },
             };
 
@@ -3363,8 +3522,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/document-requirement-list/list/semi-product/:semiProductId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 semiProductId: { "in": "path", "name": "semiProductId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -3391,8 +3552,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/document-requirement-list/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainDocumentRequirementList" },
             };
 
@@ -3416,8 +3579,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/facility/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -3443,8 +3608,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/facility/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -3468,8 +3635,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/facility',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainFacility" },
             };
 
@@ -3493,8 +3662,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/facility/list/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 query: { "in": "query", "name": "query", "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -3522,8 +3693,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/facility/list/organization/:organizationId/semi-product/:semiProductId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 semiProductId: { "in": "path", "name": "semiProductId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -3551,8 +3724,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/facility/list/organization/:organizationId/semi-product/:semiProductId/selling',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 semiProductId: { "in": "path", "name": "semiProductId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -3580,8 +3755,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/facility/list/collecting/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -3608,8 +3785,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/facility/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainFacility" },
             };
 
@@ -3633,8 +3812,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/migrations/fix-quote-company-id',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -3657,8 +3838,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/migrations/fix-all-stock-order-company-id',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -3681,8 +3864,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/organization/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -3708,8 +3893,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/organization/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -3733,8 +3920,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/organization/external/:linkId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 linkId: { "in": "path", "name": "linkId", "required": true, "dataType": "double" },
             };
 
@@ -3758,8 +3947,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/organization/company/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "dataType": "double" } },
             };
 
@@ -3783,8 +3974,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/organization',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainOrganization" },
             };
 
@@ -3808,8 +4001,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/organization/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainOrganization" },
             };
 
@@ -3833,8 +4028,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/bulk-payment/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -3858,8 +4055,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/payment/bulk-payment',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainBulkPayment" },
             };
 
@@ -3883,8 +4082,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/bulk-payment/list/organization/:payingOrganizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 payingOrganizationId: { "in": "path", "name": "payingOrganizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -3911,8 +4112,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/payment/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainBulkPayment" },
             };
 
@@ -3936,8 +4139,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -3961,8 +4166,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/payment',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainPayment" },
             };
 
@@ -3986,8 +4193,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/payment/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainPayment" },
             };
 
@@ -4011,8 +4220,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/list/organization/:payingOrganizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 payingOrganizationId: { "in": "path", "name": "payingOrganizationId", "required": true, "dataType": "string" },
                 query: { "in": "query", "name": "query", "dataType": "string" },
                 sortBy: { "in": "query", "name": "sortBy", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["PAYMENT_DATE"] }, { "dataType": "enum", "enums": ["DELIVERY_DATE"] }] },
@@ -4045,8 +4256,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/list/stock-order/:stockOrderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 stockOrderId: { "in": "path", "name": "stockOrderId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -4073,8 +4286,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/list/farmer/:farmerId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 farmerId: { "in": "path", "name": "farmerId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -4101,8 +4316,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/payment/list/bank-transfer/:bankTransferId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 bankTransferId: { "in": "path", "name": "bankTransferId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -4129,8 +4346,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/payment/confirm-payment',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainPayment" },
             };
 
@@ -4154,8 +4373,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/processing-action/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -4179,8 +4400,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/processing-action',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProcessingAction" },
             };
 
@@ -4204,8 +4427,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/processing-action/list/product/:productId/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 productId: { "in": "path", "name": "productId", "required": true, "dataType": "string" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 skuOnly: { "in": "query", "name": "skuOnly", "dataType": "boolean" },
@@ -4234,8 +4459,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/processing-action/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProcessingAction" },
             };
 
@@ -4259,8 +4486,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/product/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -4286,8 +4515,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/product/list/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -4314,8 +4545,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/product/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -4339,8 +4572,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/product/external/:linkId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 linkId: { "in": "path", "name": "linkId", "required": true, "dataType": "double" },
             };
 
@@ -4364,8 +4599,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/product/external/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "dataType": "double" } },
             };
 
@@ -4389,8 +4626,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/product',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProduct" },
             };
 
@@ -4414,8 +4653,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/product/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainProduct" },
             };
 
@@ -4439,8 +4680,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/semi-product/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -4466,8 +4709,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/semi-product/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -4491,8 +4736,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/semi-product',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainSemiProduct" },
             };
 
@@ -4516,8 +4763,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/semi-product/list/product/:productId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 productId: { "in": "path", "name": "productId", "required": true, "dataType": "string" },
                 isBuyable: { "in": "query", "name": "isBuyable", "dataType": "boolean" },
                 isSKU: { "in": "query", "name": "isSKU", "dataType": "boolean" },
@@ -4547,8 +4796,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/semi-product/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainSemiProduct" },
             };
 
@@ -4572,8 +4823,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/facility/:facilityId/all',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityId: { "in": "path", "name": "facilityId", "required": true, "dataType": "string" },
                 showPurchaseOrderOpenBalanceOnly: { "in": "query", "name": "showPurchaseOrderOpenBalanceOnly", "dataType": "boolean" },
                 purchaseOrderOnly: { "in": "query", "name": "purchaseOrderOnly", "dataType": "boolean" },
@@ -4610,8 +4863,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/organization/:organizationId/all',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 showPurchaseOrderOpenBalanceOnly: { "in": "query", "name": "showPurchaseOrderOpenBalanceOnly", "dataType": "boolean" },
                 purchaseOrderOnly: { "in": "query", "name": "purchaseOrderOnly", "dataType": "boolean" },
@@ -4646,8 +4901,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/facility/:facilityOrOrganizationId/orders-for-customers',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityOrOrganizationId: { "in": "path", "name": "facilityOrOrganizationId", "required": true, "dataType": "string" },
                 companyCustomerId: { "in": "query", "name": "companyCustomerId", "dataType": "string" },
                 openOnly: { "in": "query", "name": "openOnly", "dataType": "boolean" },
@@ -4678,8 +4935,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/all',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 showPurchaseOrderOpenBalanceOnly: { "in": "query", "name": "showPurchaseOrderOpenBalanceOnly", "dataType": "boolean" },
                 purchaseOrderOnly: { "in": "query", "name": "purchaseOrderOnly", "dataType": "boolean" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -4707,8 +4966,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/farmer/:farmerId/purchase-orders',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 farmerId: { "in": "path", "name": "farmerId", "required": true, "dataType": "string" },
                 showOpenBalanceOnly: { "in": "query", "name": "showOpenBalanceOnly", "dataType": "boolean" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -4736,8 +4997,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/availability/facility/:facilityId/semi-product/:semiProductId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityId: { "in": "path", "name": "facilityId", "required": true, "dataType": "string" },
                 semiProductId: { "in": "path", "name": "semiProductId", "required": true, "dataType": "string" },
             };
@@ -4762,8 +5025,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/stock-order/availability',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "AvailabilityInFacilitiesRequest" },
             };
 
@@ -4787,8 +5052,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/facility/:facilityId/available',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityId: { "in": "path", "name": "facilityId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -4815,8 +5082,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/facility/:facilityId/semi-product/:semiProductId/available',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityId: { "in": "path", "name": "facilityId", "required": true, "dataType": "string" },
                 semiProductId: { "in": "path", "name": "semiProductId", "required": true, "dataType": "string" },
                 womensCoffee: { "in": "query", "name": "womensCoffee", "dataType": "boolean" },
@@ -4847,8 +5116,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -4872,8 +5143,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/:dbId/with-input-orders',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -4897,8 +5170,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/stock-order',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainStockOrder" },
             };
 
@@ -4922,8 +5197,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/stock-order/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainStockOrder" },
             };
 
@@ -4947,8 +5224,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/stock-order/delete-stock-orders',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "ref": "ChainStockOrder" } },
             };
 
@@ -4972,8 +5251,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/aggregates/:stockOrderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 stockOrderId: { "in": "path", "name": "stockOrderId", "required": true, "dataType": "string" },
             };
 
@@ -4997,8 +5278,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/b2c/:stockOrderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 stockOrderId: { "in": "path", "name": "stockOrderId", "required": true, "dataType": "string" },
                 orderId: { "in": "query", "name": "orderId", "dataType": "boolean" },
                 cooperative: { "in": "query", "name": "cooperative", "dataType": "boolean" },
@@ -5025,8 +5308,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/seasonalStatistics/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 fromDate: { "in": "query", "name": "fromDate", "required": true, "dataType": "string" },
                 toDate: { "in": "query", "name": "toDate", "required": true, "dataType": "string" },
@@ -5053,8 +5338,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/stock-order/facility/:facilityOrOrganizationId/list-quotes',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 facilityOrOrganizationId: { "in": "path", "name": "facilityOrOrganizationId", "required": true, "dataType": "string" },
                 openOnly: { "in": "query", "name": "openOnly", "required": true, "dataType": "boolean" },
                 semiProductId: { "in": "query", "name": "semiProductId", "dataType": "string" },
@@ -5086,58 +5373,11 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/chain-api/system/create-databases',
-        function(request: any, response: any, next: any) {
-            const args = {
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller: any = iocContainer.get<SystemController>(SystemController);
-            if (typeof controller['setStatus'] === 'function') {
-                controller.setStatus(undefined);
-            }
-
-
-            const promise = controller.createDatabases.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/chain-api/system/delete-databases/:password',
-        function(request: any, response: any, next: any) {
-            const args = {
-                password: { "in": "path", "name": "password", "required": true, "dataType": "string" },
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller: any = iocContainer.get<SystemController>(SystemController);
-            if (typeof controller['setStatus'] === 'function') {
-                controller.setStatus(undefined);
-            }
-
-
-            const promise = controller.deleteDatabases.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/system/create-indices',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -5159,33 +5399,11 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/chain-api/system/prefilldb',
-        function(request: any, response: any, next: any) {
-            const args = {
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller: any = iocContainer.get<SystemController>(SystemController);
-            if (typeof controller['setStatus'] === 'function') {
-                controller.setStatus(undefined);
-            }
-
-
-            const promise = controller.prefillDB.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/system/initialize',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -5208,8 +5426,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/system/blockchain-initialize',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -5232,8 +5452,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/system/blockchain-test',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -5255,9 +5477,38 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/chain-api/system/test',
+    app.get('/chain-api/system/check-connection/:date',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                date: { "in": "path", "name": "date", "required": true, "dataType": "string" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller: any = iocContainer.get<SystemController>(SystemController);
+            if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+            }
+
+
+            const promise = controller.checkConnection.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/chain-api/system/test',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -5280,8 +5531,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/system/bc-organization-test',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainOrganization" },
             };
 
@@ -5305,8 +5558,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/system/bc-organization-test/:dbId',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -5329,9 +5584,37 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/chain-api/data/transaction/query',
+    app.get('/chain-api/system/copy-db',
+        authenticateMiddleware([{ "jwt": ["ADMIN"] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller: any = iocContainer.get<SystemController>(SystemController);
+            if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+            }
+
+
+            const promise = controller.copyDB.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/chain-api/data/transaction/query',
+        authenticateMiddleware([{ "jwt": [] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sourceFacilityId: { "in": "query", "name": "sourceFacilityId", "dataType": "string" },
                 targetFacilityId: { "in": "query", "name": "targetFacilityId", "dataType": "string" },
                 semiProductId: { "in": "query", "name": "semiProductId", "dataType": "string" },
@@ -5363,8 +5646,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/transaction/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -5388,8 +5673,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainTransaction" },
             };
 
@@ -5413,8 +5700,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction/stock-orders-with-inputs',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainStockOrder" },
             };
 
@@ -5438,8 +5727,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction/processing-orders-with-inputs-and-outputs',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "ref": "ChainProcessingOrder" } },
             };
 
@@ -5463,8 +5754,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/transaction/input/:stockOrderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 stockOrderId: { "in": "path", "name": "stockOrderId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -5491,8 +5784,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/transaction/output/:stockOrderId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 stockOrderId: { "in": "path", "name": "stockOrderId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -5519,8 +5814,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/transaction/list/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -5547,8 +5844,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainTransaction" },
             };
 
@@ -5572,8 +5871,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction/delete-transactions',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "ref": "ChainTransaction" } },
             };
 
@@ -5597,8 +5898,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction/cancel-transactions/:transactionId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 transactionId: { "in": "path", "name": "transactionId", "required": true, "dataType": "string" },
                 rejection: { "in": "query", "name": "rejection", "required": true, "dataType": "string" },
             };
@@ -5623,8 +5926,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/transaction/approve-transactions/:transactionId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 transactionId: { "in": "path", "name": "transactionId", "required": true, "dataType": "string" },
             };
 
@@ -5648,8 +5953,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -5675,8 +5982,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -5700,8 +6009,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/user/external/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "dataType": "double" } },
             };
 
@@ -5725,8 +6036,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user/external/:linkId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 linkId: { "in": "path", "name": "linkId", "required": true, "dataType": "double" },
             };
 
@@ -5750,8 +6063,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/user',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainUser" },
             };
 
@@ -5775,8 +6090,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
                 offset: { "in": "query", "name": "offset", "dataType": "double" },
@@ -5802,8 +6119,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/:dbId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 dbId: { "in": "path", "name": "dbId", "required": true, "dataType": "string" },
             };
 
@@ -5827,8 +6146,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/user-customer/external/list',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "array", "array": { "dataType": "double" } },
             };
 
@@ -5852,8 +6173,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/external/:linkId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 linkId: { "in": "path", "name": "linkId", "required": true, "dataType": "double" },
             };
 
@@ -5877,8 +6200,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/user-customer',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainUserCustomer" },
             };
 
@@ -5902,8 +6227,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 query: { "in": "query", "name": "query", "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -5931,8 +6258,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list/role/:role',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 role: { "in": "path", "name": "role", "required": true, "dataType": "string" },
                 query: { "in": "query", "name": "query", "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -5960,8 +6289,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list/organization/:organizationId/role/:role',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 role: { "in": "path", "name": "role", "required": true, "dataType": "string" },
                 query: { "in": "query", "name": "query", "dataType": "string" },
@@ -5991,8 +6322,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list/product/:productId/organization/:organizationId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 productId: { "in": "path", "name": "productId", "required": true, "dataType": "string" },
                 organizationId: { "in": "path", "name": "organizationId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
@@ -6020,8 +6353,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list/stock-orders/:userCustomerId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 userCustomerId: { "in": "path", "name": "userCustomerId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -6050,8 +6385,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/chain-api/data/user-customer/list/payments/:userCustomerId',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 userCustomerId: { "in": "path", "name": "userCustomerId", "required": true, "dataType": "string" },
                 sort: { "in": "query", "name": "sort", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
                 limit: { "in": "query", "name": "limit", "dataType": "double" },
@@ -6080,8 +6417,10 @@ export function RegisterRoutes(app: express.Express) {
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/chain-api/data/user-customer/delete',
+        authenticateMiddleware([{ "jwt": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ChainUserCustomer" },
             };
 
@@ -6107,6 +6446,53 @@ export function RegisterRoutes(app: express.Express) {
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
+    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+        return (request: any, _response: any, next: any) => {
+            let responded = 0;
+            let success = false;
+
+            const succeed = function(user: any) {
+                if (!success) {
+                    success = true;
+                    responded++;
+                    request['user'] = user;
+                    next();
+                }
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            const fail = function(error: any) {
+                responded++;
+                if (responded == security.length && !success) {
+                    error.status = error.status || 401;
+                    next(error)
+                }
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            for (const secMethod of security) {
+                if (Object.keys(secMethod).length > 1) {
+                    let promises: Promise<any>[] = [];
+
+                    for (const name in secMethod) {
+                        promises.push(expressAuthentication(request, name, secMethod[name]));
+                    }
+
+                    Promise.all(promises)
+                        .then((users) => { succeed(users[0]); })
+                        .catch(fail);
+                } else {
+                    for (const name in secMethod) {
+                        expressAuthentication(request, name, secMethod[name])
+                            .then(succeed)
+                            .catch(fail);
+                    }
+                }
+            }
+        }
+    }
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 

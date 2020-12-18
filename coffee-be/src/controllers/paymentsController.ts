@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
@@ -6,6 +7,7 @@ import { PaginatedList } from "../models/chain/PaginatedList";
 import { ChainPayment } from "../models/chain/ChainPayment";
 import { ChainBulkPayment } from "../models/chain/ChainBulkPayment";
 
+@Security("jwt")
 @Tags('Payments')
 @Route("chain-api/data/payment")
 export class PaymentsController extends Controller {
@@ -23,6 +25,7 @@ export class PaymentsController extends Controller {
      */
     @Get('bulk-payment/{dbId}')
     public async getBulkPayment(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainBulkPayment>> {
         return handleApiResponse(
@@ -36,6 +39,7 @@ export class PaymentsController extends Controller {
      */
     @Post('bulk-payment')
     public async postBulkPayment(
+        @Request() request: express.Request,
         @Body() requestBody: ChainBulkPayment
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -52,6 +56,7 @@ export class PaymentsController extends Controller {
      */
     @Get('bulk-payment/list/organization/{payingOrganizationId}')
     public async listBulkPaymentsForPayingOrganization(
+        @Request() request: express.Request,
         @Path() payingOrganizationId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -68,6 +73,7 @@ export class PaymentsController extends Controller {
      */
     @Post('delete')
     public async deleteBulkPayment(
+        @Request() request: express.Request,
         @Body() requestBody: ChainBulkPayment
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -82,6 +88,7 @@ export class PaymentsController extends Controller {
      */
     @Get("{dbId}")
     public async getPayment(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainPayment>> {
         return handleApiResponse(
@@ -95,6 +102,7 @@ export class PaymentsController extends Controller {
      */
     @Post('')
     public async postPayment(
+        @Request() request: express.Request,
         @Body() requestBody: ChainPayment
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -108,6 +116,7 @@ export class PaymentsController extends Controller {
      */
     @Post('delete')
     public async deletePayment(
+        @Request() request: express.Request,
         @Body() requestBody: ChainPayment
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -130,6 +139,7 @@ export class PaymentsController extends Controller {
      */
     @Get("list/organization/{payingOrganizationId}")
     public async listPaymentsForPayingOrganization(
+        @Request() request: express.Request,
         @Path() payingOrganizationId: string,
         @Query() query?: string,
         @Query() sortBy?: 'PAYMENT_DATE' | 'DELIVERY_DATE',
@@ -155,6 +165,7 @@ export class PaymentsController extends Controller {
      */
     @Get("list/stock-order/{stockOrderId}")
     public async listPaymentsForStockOrder(
+        @Request() request: express.Request,
         @Path() stockOrderId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -174,6 +185,7 @@ export class PaymentsController extends Controller {
      */
     @Get("list/farmer/{farmerId}")
     public async listPaymentsForRecipientUserCustomer(
+        @Request() request: express.Request,
         @Path() farmerId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -193,6 +205,7 @@ export class PaymentsController extends Controller {
      */
     @Get("list/bank-transfer/{bankTransferId}")
     public async listPaymentsForBankTransfer(
+        @Request() request: express.Request,
         @Path() bankTransferId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -209,6 +222,7 @@ export class PaymentsController extends Controller {
      */
     @Post('confirm-payment')
     public async confirmPayment(
+        @Request() request: express.Request,
         @Body() requestBody: ChainPayment
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

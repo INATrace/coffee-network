@@ -8,6 +8,7 @@ import { ValidateError } from "tsoa";
 import { ApiResponse } from "./models/chain/ApiResponse";
 import compression from "compression";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 // initialize configuration
 dotenv.config();
@@ -17,6 +18,7 @@ export const app = express();
 app.use(helmet());
 app.use(compression()); // Compress all routes
 
+app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb' }));
 // Use body parser to read sent json payloads
 app.use(
@@ -28,7 +30,7 @@ app.use(
 );
 
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use('/static', express.static('static'))
+app.use('/static', express.static('static'));
 
 
 RegisterRoutes(app);
@@ -55,6 +57,11 @@ app.use(function errorHandler(
         );
     }
     if (err instanceof Error) {
+        if((err as any).status) {
+            return res.status((err as any).status).json(
+                new ApiResponse<any>(undefined, 'ERROR', err.message)
+            );
+        }
         return res.status(500).json(
             new ApiResponse<any>(undefined, 'ERROR', err.message)
         );

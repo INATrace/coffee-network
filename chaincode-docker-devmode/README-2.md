@@ -32,6 +32,7 @@ Do not build outside the container (not tested, seems it does not work properly)
 ```
 docker exec -it cli bash
 peer chaincode install -p chaincodedev/chaincode/storage/go -n mycc -v 0
+# check omit `chaincodedev` if you are already in this folder
 peer chaincode instantiate -n mycc -v 0 -c '{"Args":[]}' -C myc
 ```
 
@@ -63,5 +64,5 @@ peer chaincode invoke -n mycc -c '{"Args":["GetState","key"]}' -C myc
 To stop the network run:
 
 ```
-docker-compose -f docker-compose-simple.yaml up down
+docker-compose -f docker-compose-simple.yaml down
 ```

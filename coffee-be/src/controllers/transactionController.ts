@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Path, Post, Route, Tags, Query } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Route, Tags, Query, Security, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
@@ -7,6 +8,7 @@ import { ChainStockOrder } from "../models/chain/ChainStockOrder";
 import { ChainTransaction } from "../models/chain/ChainTransaction";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Transaction')
 @Route("chain-api/data/transaction")
 export class TransactionController extends Controller {
@@ -23,6 +25,7 @@ export class TransactionController extends Controller {
      */
     @Get("query")
     public async listTransactionQuery(
+        @Request() request: express.Request,
         @Query() sourceFacilityId?: string,
         @Query() targetFacilityId?: string,
         @Query() semiProductId?: string,
@@ -51,6 +54,7 @@ export class TransactionController extends Controller {
      */
     @Get("{dbId}")
     public async getTransactionById(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainTransaction>> {
         return handleApiResponse(
@@ -64,6 +68,7 @@ export class TransactionController extends Controller {
      */
     @Post('')
     public async postTransaction(
+        @Request() request: express.Request,
         @Body() requestBody: ChainTransaction
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -78,6 +83,7 @@ export class TransactionController extends Controller {
      */
     @Post('stock-orders-with-inputs')
     public async postStockOrdersWithInputTransactions(
+        @Request() request: express.Request,
         @Body() requestBody: ChainStockOrder
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -91,6 +97,7 @@ export class TransactionController extends Controller {
      */
     @Post('processing-orders-with-inputs-and-outputs')
     public async postProcessingOrdersWithInputTransactionsAndOutputStockOrders(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProcessingOrder[]
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -109,6 +116,7 @@ export class TransactionController extends Controller {
      */
     @Get("input/{stockOrderId}")
     public async listInputTransactionsForProductUnitId (
+        @Request() request: express.Request,
         @Path() stockOrderId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -128,6 +136,7 @@ export class TransactionController extends Controller {
      */
     @Get("output/{stockOrderId}")
     public async listOutputTransactionsForProductUnitId (
+        @Request() request: express.Request,
         @Path() stockOrderId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -147,6 +156,7 @@ export class TransactionController extends Controller {
      */
     @Get("list/organization/{organizationId}")
     public async listTransactionsForOrganization(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -163,6 +173,7 @@ export class TransactionController extends Controller {
      */
     @Post('delete')
     public async deleteTransaction(
+        @Request() request: express.Request,
         @Body() requestBody: ChainTransaction
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -176,6 +187,7 @@ export class TransactionController extends Controller {
      */
     @Post('delete-transactions')
     public async deleteTransactions(
+        @Request() request: express.Request,
         @Body() requestBody: ChainTransaction[]
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -190,6 +202,7 @@ export class TransactionController extends Controller {
      */
     @Post('cancel-transactions/{transactionId}')
     public async cancelTransactions(
+        @Request() request: express.Request,
         @Path() transactionId: string,
         @Query() rejection: string
     ): Promise<ApiResponse<any>> {
@@ -205,6 +218,7 @@ export class TransactionController extends Controller {
      */
     @Post('approve-transactions/{transactionId}')
     public async approveTransactions(
+        @Request() request: express.Request,
         @Path() transactionId: string
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

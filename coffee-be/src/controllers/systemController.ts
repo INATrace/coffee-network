@@ -1,10 +1,12 @@
-import { Controller, Get, Path, Route, Tags, Post, Body } from "tsoa";
+import express from "express";
+import { Controller, Get, Path, Route, Tags, Post, Body, Security, Request } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { SystemConf } from "../contracts/systemconf";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainCode } from "../contracts/chaincode";
 import { ChainOrganization } from "../models/chain/ChainOrganization";
 
+@Security("jwt", ["ADMIN"])
 @Tags('System')
 @Route("chain-api/system")
 export class SystemController extends Controller {
@@ -32,54 +34,72 @@ export class SystemController extends Controller {
         super()
     }
 
-    @Get('create-databases')
-    public async createDatabases(): Promise<ApiResponse<any>> {
-        return handleApiResponse(
-            this.systemConf.createDatabases()
-        )
-    }
+    // @Get('create-databases')
+    // public async createDatabases(
+    //     @Request() request: express.Request,): Promise<ApiResponse<any>> {
+    //     return handleApiResponse(
+    //         this.systemConf.createDatabases()
+    //     )
+    // }
 
-    @Get('delete-databases/{password}')
-    public async deleteDatabases(
-        @Path() password: string,
-    ): Promise<ApiResponse<any>> {
-        return handleApiResponse(
-            this.systemConf.deleteDatabases(password)
-        )
-    }
+    // @Get('delete-databases/{password}')
+    // public async deleteDatabases(
+    //     @Request() request: express.Request,
+    //     @Path() password: string,
+    // ): Promise<ApiResponse<any>> {
+    //     return handleApiResponse(
+    //         this.systemConf.deleteDatabases(password)
+    //     )
+    // }
 
     @Get('create-indices')
-    public async createIndices(): Promise<ApiResponse<any>> {
+    public async createIndices(
+        @Request() request: express.Request,
+    ): Promise<ApiResponse<any>> {
         return handleApiResponse(
             this.systemConf.createIndices()
         )
     }
 
-    @Get('prefilldb')
-    public async prefillDB(): Promise<ApiResponse<any>> {
-        return handleApiResponse(
-            this.systemConf.prefillDB()
-        )
-    }
+    // @Get('prefilldb')
+    // public async prefillDB(
+    //     @Request() request: express.Request,): Promise<ApiResponse<any>> {
+    //     return handleApiResponse(
+    //         this.systemConf.prefillDB()
+    //     )
+    // }
 
     @Get('initialize')
-    public async initialize(): Promise<ApiResponse<any>> {
+    public async initialize(
+        @Request() request: express.Request,): Promise<ApiResponse<any>> {
         return handleApiResponse(
             this.systemConf.initialize()
         )
     }
 
     @Get('blockchain-initialize')
-    public async initializeBlockchain(): Promise<ApiResponse<any>> {
+    public async initializeBlockchain(
+        @Request() request: express.Request,): Promise<ApiResponse<any>> {
         return handleApiResponse(
             this.systemConf.initializeBlockchain()
         )
     }
 
     @Get('blockchain-test')
-    public async testBlockchain(): Promise<ApiResponse<any>> {
+    public async testBlockchain(
+        @Request() request: express.Request,): Promise<ApiResponse<any>> {
         return handleApiResponse(
             this.systemConf.testBlockchain()
+        )
+    }
+
+    @Get('check-connection/{date}')
+    public async checkConnection(
+        @Request() request: express.Request,
+        @Path() date: string,
+    ): Promise<ApiResponse<any>> {
+        return handleApiResponse(
+            this.chaincode.checkConnection()
         )
     }
 
@@ -88,7 +108,9 @@ export class SystemController extends Controller {
     ////////////////////////////////////////////////
 
     @Get('test')
-    public async test(): Promise<ApiResponse<any>> {
+    public async test(
+        @Request() request: express.Request,
+    ): Promise<ApiResponse<any>> {
         return handleApiResponse(
             this.chaincode.test()
         )
@@ -96,6 +118,7 @@ export class SystemController extends Controller {
 
     @Post('bc-organization-test')
     public async postOrganization(
+        @Request() request: express.Request,
         @Body() requestBody: ChainOrganization
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -105,6 +128,7 @@ export class SystemController extends Controller {
 
     @Get("bc-organization-test/{dbId}")
     public async getOrganization(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainOrganization>> {
         return handleApiResponse(
@@ -112,6 +136,13 @@ export class SystemController extends Controller {
         )
     }
 
-
+    @Get('copy-db')
+    public async copyDB(
+        @Request() request: express.Request,
+    ): Promise<ApiResponse<any>> {
+        return handleApiResponse(
+            this.chaincode.copyDB()
+        )
+    }
 
 }

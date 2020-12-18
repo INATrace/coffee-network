@@ -1,10 +1,10 @@
 import { ChainSemiProduct } from "./ChainSemiProduct"
-import { DBDocument, DocType, ForeignKeyScheme } from "./DBDocument"
+import { DBDocument, DocType, ForeignKeyScheme, TimeStamped } from "./DBDocument"
 
 /**
  * Codebook for processing evidence type
  */
-export interface ChainProcessingEvidenceType extends DocType {
+export interface ChainProcessingEvidenceType extends DocType, TimeStamped {
     /**
      * capitalized underscored string that defines the document requirement
      */

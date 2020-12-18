@@ -110,7 +110,8 @@ export class BlockchainService {
     }
 
     private getConnectionProfile(): any {
-        const newmode = false; // temporary
+        // const newmode = process.env.APP_MODE === "BLOCKCHAIN"; // temporary
+        const newmode = true
         if (newmode) {
             return require("../../blockchain/config/files/cporg1.json")
         }

@@ -1,11 +1,12 @@
 import express from "express";
 import * as fs from 'fs';
-import { Controller, Get, Path, Post, Request, Route, Tags, Body } from "tsoa";
+import { Controller, Get, Path, Post, Request, Route, Tags, Body, Security } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ApiResponse } from "../models/chain/ApiResponse";
 import { ChainFileInfoDB, ChainFileInfo } from "../models/chain/ChainFileInfo";
 import { DocumentService } from "../services/document.service";
 
+@Security("jwt")
 @Tags('Document')
 @Route("chain-api/data/document")
 export class DocumentController extends Controller {

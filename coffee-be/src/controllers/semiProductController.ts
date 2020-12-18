@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainSemiProduct } from "../models/chain/ChainSemiProduct";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Semi product')
 @Route("chain-api/data/semi-product")
 export class SemiProductController extends Controller {
@@ -24,6 +26,7 @@ export class SemiProductController extends Controller {
      */
     @Get("list")
     public async listSemiProducts(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -39,6 +42,7 @@ export class SemiProductController extends Controller {
      */
     @Get("{dbId}")
     public async getSemiProduct(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainSemiProduct>> {
         return handleApiResponse(
@@ -52,6 +56,7 @@ export class SemiProductController extends Controller {
      */
     @Post('')
     public async postSemiProduct(
+        @Request() request: express.Request,
         @Body() requestBody: ChainSemiProduct
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -71,6 +76,7 @@ export class SemiProductController extends Controller {
      */
     @Get("list/product/{productId}")
     public async listSemiProductsForProduct (
+        @Request() request: express.Request,
         @Path() productId: string,
         @Query() isBuyable?: boolean,
         @Query() isSKU?: boolean,
@@ -90,6 +96,7 @@ export class SemiProductController extends Controller {
      */
     @Post('delete')
     public async deleteSemiProduct(
+        @Request() request: express.Request,
         @Body() requestBody: ChainSemiProduct
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

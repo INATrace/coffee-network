@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -86,6 +87,146 @@ func getStateMaps(ctx contractapi.TransactionContextInterface, keys []string) ([
 		}
 	}
 	return result, nil
+}
+
+func collectObjects(ctx contractapi.TransactionContextInterface, root map[string]interface{}, fields map[string][]string, indices map[string][]string, maxLevel map[string]int) (map[string]interface{}, error) {
+	collection := make(map[string]interface{})
+	dbCollection := make(map[string]interface{})
+	err := collectObjectsRecursively(ctx, root, fields, indices, collection, dbCollection, maxLevel, false)
+	if err != nil {
+		return nil, err
+	}
+	for key, object := range dbCollection {
+		_, contained := collection[key]
+		if !contained {
+			collection[key] = object
+		}
+	}
+	return collection, nil
+}
+
+func collectObjectsRecursively(ctx contractapi.TransactionContextInterface, root map[string]interface{},
+	fields map[string][]string, indices map[string][]string,
+	collection map[string]interface{}, dbCollection map[string]interface{},
+	levelRemains map[string]int, fromDb bool) error {
+
+	dbKey, err := extractOrGenerateDbKey(&root)
+	if err != nil {
+		return err
+	}
+
+	docType := root["docType"].(string)
+
+	var levelRemainsRec map[string]int
+	if levelRemains != nil {
+		remains, specified := levelRemains[docType]
+		if specified {
+			if remains == 0 {
+				return nil
+			} else {
+				levelRemainsRec = make(map[string]int)
+				for key, value := range levelRemains {
+					levelRemainsRec[key] = value
+				}
+				levelRemainsRec[docType] = remains - 1
+			}
+		} else {
+			levelRemainsRec = levelRemains
+		}
+	}
+
+	var contained bool
+	if fromDb {
+		_, contained = dbCollection[dbKey]
+	} else {
+		_, contained = collection[dbKey]
+	}
+	if contained {
+		return nil
+	}
+
+	if fromDb {
+		dbCollection[dbKey] = root
+	} else {
+		collection[dbKey] = root
+	}
+
+	var refs []string
+
+	for _, field := range fields[docType] {
+		value, exists := root[field]
+		if !exists || value == nil {
+			continue
+		}
+
+		if ref, isRef := value.(string); isRef && ref != "" {
+			refs = append(refs, ref)
+			continue
+		} else if refList, areRefs := value.([]string); areRefs && refList != nil {
+			refs = append(refs, refList...)
+			continue
+		}
+
+		var objs []map[string]interface{}
+
+		if obj, isObj := value.(map[string]interface{}); isObj && obj != nil {
+			objs = append(objs, obj)
+		} else if objList, areObjs := value.([]map[string]interface{}); areObjs && objList != nil {
+			objs = objList
+		}
+
+		if objs != nil && len(objs) > 0 {
+			for _, obj := range objs {
+				if obj != nil {
+					err = collectObjectsRecursively(ctx, obj, fields, indices, collection, dbCollection, levelRemainsRec, false)
+					if err != nil {
+						return err
+					}
+				}
+			}
+			continue
+		}
+	}
+
+	for _, index := range indices[docType] {
+		refList, err := getPointersIndexJoin(ctx, index, dbKey)
+		if err != nil {
+			return err
+		}
+		refs = append(refs, refList...)
+	}
+
+	if refs != nil && len(refs) > 0 {
+		for _, ref := range refs {
+			if ref == "" {
+				continue
+			}
+
+			_, contained = collection[ref]
+			if contained {
+				continue
+			}
+
+			_, contained = dbCollection[ref]
+			if contained {
+				continue
+			}
+
+			var obj map[string]interface{}
+			exists, err := getStateMap(ctx, ref, &obj)
+			if err != nil {
+				return err
+			}
+			if exists {
+				err = collectObjectsRecursively(ctx, obj, fields, indices, collection, dbCollection, levelRemainsRec, true)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 // GetStateJson - experimental
@@ -288,8 +429,8 @@ func removeJoinKeysRefsFromIndex(ctx contractapi.TransactionContextInterface, m 
 	return nil
 }
 
-// performs several verifications and fixes of the object before saving (foreign keys, dbKey, deletes underscore fields and fields to be deleted before save)
-func checkIfCanInsert(ctx contractapi.TransactionContextInterface, mode string, data *map[string]interface{}, foreignKeys *[]ForeignKeyScheme, uniqueKeys *[]UniqueKeyScheme, fieldsToCleanOnSave *[]string) error {
+// performs several verifications and fixes of the object before saving (foreign keys, dbKey, deletes underscore fields)
+func checkIfCanInsert(ctx contractapi.TransactionContextInterface, mode string, data *map[string]interface{}, foreignKeys *[]ForeignKeyScheme, uniqueKeys *[]UniqueKeyScheme) error {
 	if foreignKeys != nil {
 		err := checkForeignKeys(ctx, data, foreignKeys)
 		if err != nil {
@@ -306,9 +447,6 @@ func checkIfCanInsert(ctx contractapi.TransactionContextInterface, mode string, 
 		if err != nil {
 			return err
 		}
-	}
-	if fieldsToCleanOnSave != nil {
-		clearOnSave(data, fieldsToCleanOnSave)
 	}
 	return nil
 }
@@ -335,6 +473,11 @@ func verifyAndFixJSON(state string, data *map[string]interface{}) error {
 
 // inserts the state data from a map obtained from JSON
 func insertData(ctx contractapi.TransactionContextInterface, data *map[string]interface{}) error {
+	fieldsToCleanOnSave := fieldsToCleanOnSaveForObject(data)
+	if fieldsToCleanOnSave != nil {
+		clearOnSave(data, fieldsToCleanOnSave)
+	}
+
 	key := (*data)["dbKey"].(string)
 	popravljeno, _ := json.Marshal(*data)
 	return ctx.GetStub().PutState(key, []byte(popravljeno))
@@ -385,7 +528,7 @@ func extractOrGenerateDbKey(data *map[string]interface{}) (string, error) {
 		(*data)["dbKey"] = dbKey
 		return "", fmt.Errorf("dbKey generation not implemented") // TODO: remove
 	} else {
-		dbKey := (*data)["dbKey"].(string)
+		dbKey = (*data)["dbKey"].(string)
 		if dbKey == "" {
 			return "", fmt.Errorf("Empty db key")
 		}
@@ -418,6 +561,20 @@ func transcribeKey(data *map[string]interface{}, keyField string, objectField st
 	if key == "" && objectKey != "" {
 		(*data)[keyField] = objectKey
 	}
+
+	return nil
+}
+
+func timestamp(data *map[string]interface{}) error {
+	timestamp, err := fmt.Println(time.Now().Format(time.RFC3339))
+	if err != nil {
+		return err
+	}
+
+	if (*data)["created"] == nil || (*data)["created"].(string) == "" {
+		(*data)["created"] = timestamp
+	}
+	(*data)["lastChange"] = timestamp
 
 	return nil
 }
@@ -577,14 +734,22 @@ func deleteIndexUnique(ctx contractapi.TransactionContextInterface, m *map[strin
 
 func createIndexJoin(ctx contractapi.TransactionContextInterface, m *map[string]interface{}, joinKey *JoinKeyScheme) (string, error) {
 	dbKey := (*m)["dbKey"].(string)
-	refKey := (*m)[joinKey.Key].(string)
-	return ctx.GetStub().CreateCompositeKey(joinKey.Name, []string{refKey, dbKey})
+	fmt.Println("XXXX", joinKey.Key, m)
+	tmpRef := (*m)[joinKey.Key]
+	if tmpRef != nil {
+		refKey := tmpRef.(string)
+		return ctx.GetStub().CreateCompositeKey(joinKey.Name, []string{refKey, dbKey})
+	}
+	return "", nil
 }
 
 func insertIndexJoin(ctx contractapi.TransactionContextInterface, m *map[string]interface{}, joinKey *JoinKeyScheme) error {
 	key, err := createIndexJoin(ctx, m, joinKey)
 	if err != nil {
 		return err
+	}
+	if key == "" {
+		return nil
 	}
 	var value []byte
 	if joinKey.Value != "" {
@@ -601,6 +766,9 @@ func deleteIndexJoin(ctx contractapi.TransactionContextInterface, m *map[string]
 	key, err := createIndexJoin(ctx, m, joinKey)
 	if err != nil {
 		return err
+	}
+	if key == "" {
+		return nil
 	}
 	fmt.Println("DELETING INDEX:", key)
 	return ctx.GetStub().DelState(key)
@@ -889,7 +1057,10 @@ func checkCurrentStateAndUpdateReferenceIndex(ctx contractapi.TransactionContext
 			if mode == "update" {
 				deleteIndexJoin(ctx, &currentData, &joinKey)
 			}
-			insertIndexJoin(ctx, data, &joinKey)
+			err = insertIndexJoin(ctx, data, &joinKey)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -907,14 +1078,13 @@ func verifyFixAndInitialize(ctx contractapi.TransactionContextInterface, mode st
 		return err
 	}
 
-	foreignKeys := foreignKeySchemeForObject(data)            // pointer to array
-	uniqueKeys := uniqueKeySchemeForObject(data)              // pointer to array
-	joinKeys := joinKeySchemeForObject(data)                  // pointer to array
-	fieldsToCleanOnSave := fieldsToCleanOnSaveForObject(data) // pointer to array
+	foreignKeys := foreignKeySchemeForObject(data) // pointer to array
+	uniqueKeys := uniqueKeySchemeForObject(data)   // pointer to array
+	joinKeys := joinKeySchemeForObject(data)       // pointer to array
 
 	// fmt.Println("FKS:", *foreignKeys)
 	// fmt.Println("UKS:", *uniqueKeys)
-	err = checkIfCanInsert(ctx, mode, data, foreignKeys, uniqueKeys, fieldsToCleanOnSave)
+	err = checkIfCanInsert(ctx, mode, data, foreignKeys, uniqueKeys)
 	if err != nil {
 		return err
 	}
@@ -1007,8 +1177,6 @@ func updateOneToManyList(
 	insert func(map[string]interface{}) error,
 	delete func(map[string]interface{}) error) error {
 
-	var err error
-
 	if sources == nil {
 		sources = make([]map[string]interface{}, 0)
 	}
@@ -1019,15 +1187,24 @@ func updateOneToManyList(
 
 	var toDelete []int
 	for i, source := range sources {
-		if source == nil || source["dbKey"] == nil {
+		if source == nil {
 			return fmt.Errorf("Invalid item in one to many list")
 		}
+		sourceDbKey, err := extractOrGenerateDbKey(&source)
+		if err != nil {
+			return err
+		}
+
 		var target map[string]interface{}
 		for _, t := range targets {
-			if t == nil || t["dbKey"] == nil {
+			if t == nil {
 				return fmt.Errorf("Invalid item in one to many list")
 			}
-			if t["dbKey"].(string) == source["dbKey"].(string) {
+			tDbKey, err := extractOrGenerateDbKey(&t)
+			if err != nil {
+				return err
+			}
+			if tDbKey == sourceDbKey {
 				target = t
 				break
 			}
@@ -1051,12 +1228,16 @@ func updateOneToManyList(
 	sources = sources[:len(sources)-len(toDelete)]
 
 	for _, target := range targets {
-		if target == nil || target["dbKey"] == nil {
+		if target == nil {
 			return fmt.Errorf("Invalid item in one to many list")
+		}
+		targetDbKey, err := extractOrGenerateDbKey(&target)
+		if err != nil {
+			return err
 		}
 		var source map[string]interface{}
 		for _, s := range sources {
-			if s["dbKey"] == target["dbKey"] {
+			if s["dbKey"].(string) == targetDbKey {
 				source = s
 				break
 			}
@@ -1075,7 +1256,6 @@ func updateOneToManyList(
 // ManageState - inserts the organization. Parameter mode must be one of "insert", "update" or "delete".
 // Key is "" for insert and update, but is mandatory for delete.
 func (s *SmartContract) ManageState(ctx contractapi.TransactionContextInterface, mode string, state string, key string) error {
-
 	var data map[string]interface{}
 
 	if mode == "insert" || mode == "update" {
@@ -1085,8 +1265,14 @@ func (s *SmartContract) ManageState(ctx contractapi.TransactionContextInterface,
 		if err != nil {
 			return err
 		}
-		// !!! correct so that fields to clean are not cleaned until here
-		return insertData(ctx, &data)
+		docType := data["docType"].(string)
+		if docType == "stock_order" {
+			return insertStockOrderWithTransactions(ctx, &data)
+		} else if docType == "processing_order" {
+			return insertProcessingOrderWithTransactionsAndStockOrders(ctx, &data)
+		} else {
+			return insertData(ctx, &data)
+		}
 	}
 	if mode == "delete" {
 
@@ -1137,9 +1323,23 @@ func (s *SmartContract) ManageState(ctx contractapi.TransactionContextInterface,
 }
 
 func insertStockOrderWithTransactions(ctx contractapi.TransactionContextInterface, order *map[string]interface{}) error {
-	// TODO: foreign keys, cleaning, etc
+	// for possible use in gathering all relevant objects
+	// fields := make(map[string][]string)
+	// fields["stock_order"] = []string{"semiProductId", "facilityId", "organizationId", "orderId", "inputTransactions", "outputTransactions"}
+	// fields["transaction"] = []string{"sourceStockOrderId", "targetStockOrderId", "sourceStockOrder"}
+	// ...
+	// indices := make(map[string][]string)
+	// indices["stock_order"] = []string{"joinTxTrgStockOrder", "joinTxSrcStockOrder", "joinPayStockOrder"}
+	// indices["order"] = []string{"joinStockOrderOrder"}
+	// levels := make(map[string]int)
+	// levels["stock_order"] = 2
+	// levels["transaction"] = 1
+	// cache, err := collectObjects(ctx, *order, fields, indices, levels)
 
-	dbKey := (*order)["dbKey"].(string)
+	dbKey, err := extractOrGenerateDbKey(order)
+	if err != nil {
+		return err
+	}
 
 	var currentOrder map[string]interface{}
 	exists, err := getStateMap(ctx, dbKey, &currentOrder)
@@ -1162,6 +1362,14 @@ func insertStockOrderWithTransactions(ctx contractapi.TransactionContextInterfac
 		}
 	}
 
+	orderType, err := extractStringValue(*order, "orderType")
+	if err != nil {
+		return err
+	}
+	if orderType != "GENERAL_ORDER" && orderType != "SALES_ORDER" {
+		return fmt.Errorf("Order must be of orderType GENERAL_ORDER or SALES_ORDER to allow input transactions")
+	}
+
 	transactionsRaw := (*order)["inputTransactions"]
 	if transactionsRaw == nil {
 		return nil
@@ -1172,8 +1380,14 @@ func insertStockOrderWithTransactions(ctx contractapi.TransactionContextInterfac
 			continue
 		}
 		transaction := transactions[index]
-		if transaction != nil && transaction["dbKey"] != nil && transaction["targetStockOrderId"].(string) != dbKey {
+		targetStockOrderId := ""
+		if transaction["targetStockOrderId"] != nil {
+			targetStockOrderId = transaction["targetStockOrderId"].(string)
+		}
+		if targetStockOrderId != "" && targetStockOrderId != dbKey {
 			return fmt.Errorf("Invalid transaction")
+		} else {
+			transaction["targetStockOrderId"] = dbKey
 		}
 	}
 
@@ -1182,7 +1396,6 @@ func insertStockOrderWithTransactions(ctx contractapi.TransactionContextInterfac
 		return err
 	}
 
-	// clean fields on order
 	insertData(ctx, order)
 
 	err = updateTransactions(ctx, currentTransactions, transactions)
@@ -1195,8 +1408,6 @@ func insertStockOrderWithTransactions(ctx contractapi.TransactionContextInterfac
 
 func insertProcessingOrderWithTransactionsAndStockOrders(ctx contractapi.TransactionContextInterface, order *map[string]interface{}) error {
 	var err error
-
-	// TODO: foreign keys check, key replacement
 
 	dbKey, err := extractOrGenerateDbKey(order)
 	if err != nil {
@@ -1247,7 +1458,6 @@ func insertProcessingOrderWithTransactionsAndStockOrders(ctx contractapi.Transac
 		}
 		(*order)["targetStockOrderIds"] = []string{stockOrder["dbKey"].(string)}
 
-		// TODO: clean fields
 		insertData(ctx, order)
 		return nil
 	}
@@ -1330,8 +1540,10 @@ func insertTransaction(ctx contractapi.TransactionContextInterface, transaction 
 			transaction["sourceFacilityId"] = sourceOrder["facilityId"]
 			transaction["semiProductId"] = sourceOrder["semiProductId"]
 
-			// TODO: modify quantities !?!?
-			insertData(ctx, &sourceOrder) // necessary?
+			_, err = insertStockOrder(ctx, sourceOrder)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -1355,14 +1567,18 @@ func insertTransaction(ctx contractapi.TransactionContextInterface, transaction 
 				return nil, fmt.Errorf("Target semi product does not match source semi product")
 			}
 
-			// TODO: modify quantities !?!?
-			insertData(ctx, &targetOrder) // necessary?
+			_, err = insertStockOrder(ctx, targetOrder)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
-	// TODO: timestamps on transaction ???
-
-	// TODO: save transaction
+	timestamp(&transaction)
+	err = insertData(ctx, &transaction)
+	if err != nil {
+		return nil, err
+	}
 
 	return transaction, nil
 }
@@ -1440,6 +1656,11 @@ func updateStockOrders(ctx contractapi.TransactionContextInterface, sources []ma
 func insertStockOrder(ctx contractapi.TransactionContextInterface, order map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 
+	dbKey, err := extractOrGenerateDbKey(&order)
+	if err != nil {
+		return nil, err
+	}
+
 	err = transcribeKey(&order, "gradeAbbreviationId", "gradeAbbreviation")
 	if err != nil {
 		return nil, err
@@ -1465,7 +1686,84 @@ func insertStockOrder(ctx contractapi.TransactionContextInterface, order map[str
 		return nil, err
 	}
 
-	// TODO: compute balance and quantities?
+	orderType, err := extractStringValue(order, "orderType")
+	if err != nil {
+		return nil, err
+	}
+
+	if orderType == "PURCHASE_ORDER" {
+		if order["cost"] != nil {
+			balance, err := extractFloatValue(order, "cost")
+			if err != nil {
+				return nil, err
+			}
+			payments, err := getPayments(ctx, dbKey)
+			if err != nil {
+				return nil, err
+			}
+			for _, payment := range payments {
+				var amount float64
+				purposeType, err := extractStringValue(payment, "paymentPurposeType")
+				if err != nil {
+					return nil, err
+				}
+				if purposeType == "FIRST_INSTALLMENT" {
+					amount, err = extractFloatValue(payment, "amount")
+					preferredWayOfPayment, err := extractStringValue(payment, "preferredWayOfPayment")
+					if err != nil {
+						return nil, err
+					}
+					if preferredWayOfPayment == "CASH_VIA_COLLECTOR" {
+						amountPaidToTheCollector, err := extractFloatValue(payment, "amountPaidToTheCollector")
+						if err != nil {
+							return nil, err
+						}
+						amount += amountPaidToTheCollector
+					}
+				} else {
+					amount = 0
+				}
+
+				balance -= amount
+			}
+			order["balance"] = balance
+		}
+	}
+
+	if orderType == "SALES_ORDER" || orderType == "GENERAL_ORDER" {
+		inputTransactions, err := getInputTransactions(ctx, dbKey)
+		if err != nil {
+			return nil, err
+		}
+		fullfilledQuantity = float64(0)
+		for _, inputTransaction := range inputTransactions {
+			quantity, err := extractFloatValue(inputTransaction, "outputQuantity")
+			if err != nil {
+				return nil, err
+			}
+			fullfilledQuantity += quantity
+		}
+	} else {
+		fullfilledQuantity = totalQuantity
+	}
+	order["fullfilledQuantity"] = fullfilledQuantity
+
+	if orderType != "SALES_ORDER" {
+		outputQuantity := float64(0)
+		outputTransactions, err := getOutputTransactions(ctx, dbKey)
+		if err != nil {
+			return nil, err
+		}
+		for _, outputTransaction := range outputTransactions {
+			quantity, err := extractFloatValue(outputTransaction, "inputQuantity")
+			if err != nil {
+				return nil, err
+			}
+			outputQuantity += quantity
+		}
+		availableQuantity = fullfilledQuantity - outputQuantity
+		order["availableQuantity"] = availableQuantity
+	}
 
 	if fullfilledQuantity > totalQuantity {
 		return nil, fmt.Errorf("Failed to insert stock order. Fullfilled quantity can not be larger than total quantity")
@@ -1475,13 +1773,17 @@ func insertStockOrder(ctx contractapi.TransactionContextInterface, order map[str
 		return nil, fmt.Errorf("Failed to insert stock order. Available quantity can not be larger than fullfilled quantity")
 	}
 
+	if availableQuantity < 0 {
+		return nil, fmt.Errorf("Failed to insert stock order. Negative stock availability")
+	}
+
 	if availableQuantity > 0 {
 		order["isAvailable"] = "1"
 	} else {
 		order["isAvailable"] = "0"
 	}
 
-	if order["orderType"] != nil && order["orderType"].(string) == "GENERAL_ORDER" && totalQuantity > fullfilledQuantity {
+	if orderType == "GENERAL_ORDER" && totalQuantity > fullfilledQuantity {
 		order["isOpenOrder"] = "1"
 	} else {
 		order["isOpenOrder"] = "0"
@@ -1526,6 +1828,7 @@ func insertStockOrder(ctx contractapi.TransactionContextInterface, order map[str
 		order["quouteOrganizationId"] = ""
 	}
 
+	timestamp(&order)
 	err = insertData(ctx, &order)
 	if err != nil {
 		return nil, err

@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainCompanyCustomer } from "../models/chain/ChainCompanyCustomer";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Company Customer')
 @Route("chain-api/data/company-customer")
 export class CompanyCustomerController extends Controller {
@@ -24,6 +26,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Get("list")
     public async listCompanyCustomers(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -39,6 +42,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Get("{dbId}")
     public async getCompanyCustomer(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainCompanyCustomer>> {
         return handleApiResponse(
@@ -54,6 +58,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Post('external/list')
     public async companyCustomersForIds(
+        @Request() request: express.Request,
         @Body() requestBody: number[]
     ): Promise<ApiResponse<ChainCompanyCustomer[]>> {
         return handleApiResponse(
@@ -67,6 +72,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Get("external/{linkId}")
     public async getComapnyCustomerByAFId(
+        @Request() request: express.Request,
         @Path() linkId: number,
     ): Promise<ApiResponse<ChainCompanyCustomer>> {
         return handleApiResponse(
@@ -80,6 +86,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Post('')
     public async postCompanyCustomer(
+        @Request() request: express.Request,
         @Body() requestBody: ChainCompanyCustomer
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -96,6 +103,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Get("list/organization/{organizationId}")
     public async listCompanyCustomersForOrganization(
+        @Request() request: express.Request,
         @Path() organizationId: string,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
@@ -115,6 +123,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Get("list/product/{productId}/organization/{organizationId}")
     public async listCompanyCustomersForProductAndOrganization(
+        @Request() request: express.Request,
         @Path() productId: string,
         @Path() organizationId: string,
         @Query() sort?: 'ASC' | 'DESC',
@@ -132,6 +141,7 @@ export class CompanyCustomerController extends Controller {
      */
     @Post('delete')
     public async deleteCompanyCustomer(
+        @Request() request: express.Request,
         @Body() requestBody: ChainCompanyCustomer
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

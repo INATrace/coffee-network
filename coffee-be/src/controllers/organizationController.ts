@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainOrganization } from "../models/chain/ChainOrganization";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Organization')
 @Route("chain-api/data/organization")
 export class OrganizationController extends Controller {
@@ -24,6 +26,7 @@ export class OrganizationController extends Controller {
      */
     @Get("list")
     public async listOrganizations(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -39,6 +42,7 @@ export class OrganizationController extends Controller {
      */
     @Get("{dbId}")
     public async getOrganization(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainOrganization>> {
         return handleApiResponse(
@@ -52,6 +56,7 @@ export class OrganizationController extends Controller {
      */
     @Get("external/{linkId}")
     public async getOrganizationByCompanyId(
+        @Request() request: express.Request,
         @Path() linkId: number,
     ): Promise<ApiResponse<ChainOrganization>> {
         return handleApiResponse(
@@ -67,6 +72,7 @@ export class OrganizationController extends Controller {
      */
     @Post('company/list')
     public async organizationsForIds(
+        @Request() request: express.Request,
         @Body() requestBody: number[]
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -80,6 +86,7 @@ export class OrganizationController extends Controller {
      */
     @Post('')
     public async postOrganization(
+        @Request() request: express.Request,
         @Body() requestBody: ChainOrganization
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -93,6 +100,7 @@ export class OrganizationController extends Controller {
      */
     @Post('delete')
     public async deleteOrganization(
+        @Request() request: express.Request,
         @Body() requestBody: ChainOrganization
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

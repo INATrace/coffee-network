@@ -170,6 +170,13 @@ export class SystemConf {
     @Inject
     public bcService: BlockchainService
 
+    get isBlockchainApp() {
+        return process.env.APP_MODE === 'BLOCKCHAIN'
+    }
+
+    get isNodeApp() {
+        return process.env.APP_MODE === 'NODE'
+    }
 
     createDatabase(dbname: string) {
         return this.dbService.writeConnection.db.create(dbname)
@@ -234,7 +241,14 @@ export class SystemConf {
 
     async createIndices(res: any[] = []) {
         for (const dbase of INDEX_CONFIG) {
-            const db = this.dbService.writeConnection.db.use(dbase.dbname);
+
+            let db = null
+            if(this.isNodeApp) {
+                db = this.dbService.writeConnection.db.use(dbase.dbname);
+            }
+            if(this.isBlockchainApp) {
+                db = this.dbService.readConnection.db.use(dbase.dbname);
+            }
             for (const index of dbase.indices) {
                 const response = await db.createIndex(index.config)
                 res.push(`${ dbase.dbname }.${ index.index }: ${ response.result }`)

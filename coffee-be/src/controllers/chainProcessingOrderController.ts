@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
-import { ChainSemiProduct } from "../models/chain/ChainSemiProduct";
-import { PaginatedList } from "../models/chain/PaginatedList";
 import { ChainProcessingOrder } from "../models/chain/ChainProcessingOrder";
+import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Security("jwt")
 @Tags('Processing order')
 @Route("chain-api/data/processing-order")
 export class ProcessingOrderController extends Controller {
@@ -25,6 +26,7 @@ export class ProcessingOrderController extends Controller {
      */
     @Get("list")
     public async listProcessingOrders(
+        @Request() request: express.Request,
         @Query() sort?: 'ASC' | 'DESC',
         @Query() limit?: number,
         @Query() offset?: number
@@ -46,6 +48,7 @@ export class ProcessingOrderController extends Controller {
      */
     @Get("facility/{facilityId}/all")
     public async listProcessingOrdersForFacility(
+        @Request() request: express.Request,
         @Path() facilityId: string,
         @Query() query? :string,
         @Query() sort?: 'ASC' | 'DESC',
@@ -63,6 +66,7 @@ export class ProcessingOrderController extends Controller {
      */
     @Get("{dbId}")
     public async getProcessingOrder(
+        @Request() request: express.Request,
         @Path() dbId: string,
     ): Promise<ApiResponse<ChainProcessingOrder>> {
         return handleApiResponse(
@@ -76,6 +80,7 @@ export class ProcessingOrderController extends Controller {
      */
     @Post('')
     public async postProcessingOrder(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProcessingOrder
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
@@ -89,6 +94,7 @@ export class ProcessingOrderController extends Controller {
      */
     @Post('delete')
     public async deleteProcessingOrder(
+        @Request() request: express.Request,
         @Body() requestBody: ChainProcessingOrder
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(

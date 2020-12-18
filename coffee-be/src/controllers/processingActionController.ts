@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import express from "express";
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
 import { Inject } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { PaginatedList } from "../models/chain/PaginatedList";
 import { ChainProcessingAction } from "../models/chain/ChainProcessingAction";
 
+@Security("jwt")
 @Tags('Processing action')
 @Route("chain-api/data/processing-action")
 export class ProcessingActionController extends Controller {
@@ -22,6 +24,7 @@ export class ProcessingActionController extends Controller {
    */
   @Get("{dbId}")
   public async getProcessingAction(
+    @Request() request: express.Request,
     @Path() dbId: string,
   ): Promise<ApiResponse<ChainProcessingAction>> {
     return handleApiResponse(
@@ -35,6 +38,7 @@ export class ProcessingActionController extends Controller {
    */
   @Post('')
   public async postProcessingAction(
+    @Request() request: express.Request,
     @Body() requestBody: ChainProcessingAction
   ): Promise<ApiResponse<any>> {
     return handleApiResponse(
@@ -52,6 +56,7 @@ export class ProcessingActionController extends Controller {
    */
   @Get("list/product/{productId}/organization/{organizationId}")
   public async listProcessingActionsForProductAndOrganization(
+    @Request() request: express.Request,
     @Path() productId: string,
     @Path() organizationId: string,
     @Query() skuOnly?: boolean,
@@ -70,6 +75,7 @@ export class ProcessingActionController extends Controller {
    */
   @Post('delete')
   public async deleteProcessingAction(
+    @Request() request: express.Request,
     @Body() requestBody: ChainProcessingAction
   ): Promise<ApiResponse<any>> {
     return handleApiResponse(
