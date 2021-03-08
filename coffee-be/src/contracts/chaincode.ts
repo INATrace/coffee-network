@@ -1,8 +1,6 @@
-import { Transaction } from "fabric-network";
 import { DocumentListParams } from "nano";
-import { Factory, Inject, Singleton } from "typescript-ioc";
+import { Inject, Singleton } from "typescript-ioc";
 import { v4 as uuid } from 'uuid';
-import { OrderController } from "../controllers/orderController";
 import { getResponseValue } from "../models/chain/ApiResponse";
 import { ChainActionType, ChainActionTypeDB } from "../models/chain/ChainActionType";
 import { ChainBulkPayment, ChainBulkPaymentDB } from "../models/chain/ChainBulkPayment";
@@ -25,7 +23,7 @@ import { ChainProcessingOrder, ChainProcessingOrderDB } from "../models/chain/Ch
 import { ChainProduct, ChainProductDB } from "../models/chain/ChainProduct";
 import { ChainProductOrder, ChainProductOrderDB } from "../models/chain/ChainProductOrder";
 import { ChainSemiProduct, ChainSemiProductAvailability, ChainSemiProductDB } from "../models/chain/ChainSemiProduct";
-import { ChainStockOrder, ChainStockOrderDB, KeyAggregates, ProcessingOrderHistory, QuoteRequirementConfirmation, QuoteRequirementConfirmationsWithMetaData, StockOrderAgg, StockOrderAggregates, WeightedAggregate } from "../models/chain/ChainStockOrder";
+import { B2CHistoryItem, B2CHistoryTimeline, ChainStockOrder, ChainStockOrderDB, KeyAggregates, ProcessingOrderHistory, QuoteRequirementConfirmation, QuoteRequirementConfirmationsWithMetaData, StockOrderAgg, StockOrderAggregates, WeightedAggregate } from "../models/chain/ChainStockOrder";
 import { ChainTransaction, ChainTransactionDB } from "../models/chain/ChainTransaction";
 import { ChainUser, ChainUserDB } from "../models/chain/ChainUser";
 import { ChainUserCompanyCustomerCounter, ChainUserCompanyCustomerCounterDB } from "../models/chain/ChainUserCompanyCustomerCounter";
@@ -35,7 +33,11 @@ import { PaginatedList } from "../models/chain/PaginatedList";
 import { BlockchainService } from "../services/blockchainService";
 import { DatabaseService } from "../services/databaseService";
 import { ElasticsearchService } from "../services/elasticsearchService";
+import { HistoryCacheService } from "../services/historyCacheService";
 
+
+const HISTORY_CUTTOFF_SIZE = 2000000
+const HISTORY_CUTOFF_DEPTH = 4  // cut on depth - 1
 
 export interface StockOrderFilters {
     showPurchaseOrderOpenBalanceOnly?: boolean;
@@ -93,7 +95,6 @@ function setNestedObjectRec(obj: any, path: string[], value: any) {
     }
     setNestedObjectRec(obj[path[0]], path.slice(1), value)
 }
-
 
 const codeToFieldInfoList = [
     {
@@ -260,7 +261,7 @@ codeToFieldInfoList.forEach(x => {
 
 
 @Singleton
-@Factory(() => new ChainCode())
+// @Factory(() => new ChainCode())
 export class ChainCode {
     @Inject
     public dbService: DatabaseService
@@ -270,6 +271,9 @@ export class ChainCode {
 
     @Inject
     public bcService: BlockchainService
+
+    @Inject
+    public historyCache: HistoryCacheService
 
     timestamp(obj: any, leaveAsIs = false) {
         if (leaveAsIs) return null
@@ -433,7 +437,7 @@ export class ChainCode {
                     let status = "DONE"
                     console.log(valueFix._id, valueFix.docType, docType, insertFunction)
                     const res = await insertFunction(valueFix).catch((e: any) => {
-                        if(e.responses && e.responses.length > 0) {
+                        if (e.responses && e.responses.length > 0) {
                             status = e.responses[0].response.message
                         } else {
                             status = '' + e
@@ -1378,7 +1382,11 @@ export class ChainCode {
                     const outputQuantity = await this.usedQuantity(newStockOrder._id)
                     newStockOrder.availableQuantity = newStockOrder.fullfilledQuantity - outputQuantity
                 }
-                if (newStockOrder.availableQuantity < 0) throw Error("Negative stock availability")
+                console.log("QQ:", newStockOrder.availableQuantity, newStockOrder.availableQuantity < 0)
+                if (newStockOrder.availableQuantity < 0) {
+                    console.log(newStockOrder._id, newStockOrder.identifier )
+                    throw Error("Negative stock availability")
+                }
                 if (newStockOrder.fullfilledQuantity < newStockOrder.availableQuantity) throw Error(`Too big available quantity (${ newStockOrder.availableQuantity }) in regard to fullfilmentQuantity (${ newStockOrder.fullfilledQuantity })`)
             }
 
@@ -1477,7 +1485,6 @@ export class ChainCode {
             if (withInputOrders) {
                 stockOrder.inputOrders = await org.readForIds(this.dbService, stockOrder.inputTransactions.map(tx => tx.sourceStockOrderId), writeDatabase)
             }
-
             if (stockOrder.processingActionId) {
                 stockOrder.processingAction = await this.getProcessingAction(stockOrder.processingActionId, writeDatabase).catch(e => null)
             }
@@ -2284,96 +2291,96 @@ export class ChainCode {
 
     // nn = 0
     // soSet = new Set()
-    public async stockOrderHistory(stockOrderId: string, cache: Map<string, ChainHistory>, processingOrderCache: Map<string, ChainProcessingOrder>): Promise<ChainHistory> {
-        // console.log("RUN:", this.nn, this.soSet.size)
-        // const t0 = (new Date()).getTime()
-        const tmpHistory = cache.get(stockOrderId)
-        if (tmpHistory) {
-            return tmpHistory;
-        }
-        // this.nn += 1
-        // this.soSet.add(stockOrderId)
+    // public async stockOrderHistory(stockOrderId: string, cache: Map<string, ChainHistory>, processingOrderCache: Map<string, ChainProcessingOrder>): Promise<ChainHistory> {
+    //     // console.log("RUN:", this.nn, this.soSet.size)
+    //     // const t0 = (new Date()).getTime()
+    //     const tmpHistory = cache.get(stockOrderId)
+    //     if (tmpHistory) {
+    //         return tmpHistory;
+    //     }
+    //     // this.nn += 1
+    //     // this.soSet.add(stockOrderId)
 
-        const stockOrder = await this.getStockOrder(stockOrderId, false, true)
-        if (stockOrder.orderType === 'PURCHASE_ORDER') {
-            const hist = {
-                stockOrder,
-                ancestors: []
-            } as ChainHistory
-            cache.set(stockOrderId, hist)
-            return hist
-        }
-        // const t1 = (new Date()).getTime()
-        // console.log("TT:", t1 - t0)
+    //     const stockOrder = await this.getStockOrder(stockOrderId, false, true)
+    //     if (stockOrder.orderType === 'PURCHASE_ORDER') {
+    //         const hist = {
+    //             stockOrder,
+    //             ancestors: []
+    //         } as ChainHistory
+    //         cache.set(stockOrderId, hist)
+    //         return hist
+    //     }
+    //     // const t1 = (new Date()).getTime()
+    //     // console.log("TT:", t1 - t0)
 
-        if (!stockOrder.processingOrderId) throw Error("Strange stock order without processing order, thati is not purchase order")
+    //     if (!stockOrder.processingOrderId) throw Error("Strange stock order without processing order, thati is not purchase order")
 
-        let processingOrder = processingOrderCache.get(stockOrder.processingOrderId)
-        if (!processingOrder) {
-            processingOrder = await this.getProcessingOrder(stockOrder.processingOrderId, false, true, true)
-            processingOrderCache.set(processingOrder._id, processingOrder)
-        }
+    //     let processingOrder = processingOrderCache.get(stockOrder.processingOrderId)
+    //     if (!processingOrder) {
+    //         processingOrder = await this.getProcessingOrder(stockOrder.processingOrderId, false, true, true)
+    //         processingOrderCache.set(processingOrder._id, processingOrder)
+    //     }
 
-        const history = {
-            stockOrder,
-            processingOrder,
-            ancestors: [] as ChainHistory[]
-        }
-        const action = processingOrder.processingAction// await this.getProcessingAction(processingOrder.processingActionId)
-        // const t2 = (new Date()).getTime()
-        // console.log("TT2:", t2 - t1)
-        // processingOrder.processingAction = action
-        if (action && (processingOrder.processingAction.type === 'TRANSFER' || processingOrder.processingAction.type === 'SHIPMENT')) {
-            // const t0 = (new Date()).getTime()
-            const pagedInputTxs = await this.listInputTransactions(stockOrder._id, null, false, true)
-            // const t1 = (new Date()).getTime()
-            // console.log("TTT:", t1 - t0, pagedInputTxs.count)
-            const inputTransactions = pagedInputTxs.items
-            // const lst = await Promise.all(inputTransactions.map(async (tx) => await this.stockOrderHistory(tx.sourceStockOrderId, cache)))
-            const lst: ChainHistory[] = []
-            for (const tx of inputTransactions) {
-                lst.push(await this.stockOrderHistory(tx.sourceStockOrderId, cache, processingOrderCache))
-            }
-            lst.forEach(res => history.ancestors.push(res))
-            // for (const tx of stockOrder.inputTransactions) {
-            //     history.ancestors.push(await this.stockOrderHistory(tx.sourceStockOrderId))
-            // }
-        } else if (action && processingOrder.processingAction.type === 'PROCESSING') {
-            // const t0 = (new Date()).getTime()
-            const pagedInputTxs = await this.listInputTransactions(processingOrder._id, null, false, true)
-            const inputTransactions = pagedInputTxs.items
-            // const t1 = (new Date()).getTime()
-            // console.log("TTT:", t1 - t0, pagedInputTxs.count)
-            // const lst = await Promise.all(inputTransactions.map(async (tx) => await this.stockOrderHistory(tx.sourceStockOrderId, cache)))
-            const lst: ChainHistory[] = []
-            for (const tx of inputTransactions) {
-                lst.push(await this.stockOrderHistory(tx.sourceStockOrderId, cache, processingOrderCache))
-            }
+    //     const history = {
+    //         stockOrder,
+    //         processingOrder,
+    //         ancestors: [] as ChainHistory[]
+    //     }
+    //     const action = processingOrder.processingAction// await this.getProcessingAction(processingOrder.processingActionId)
+    //     // const t2 = (new Date()).getTime()
+    //     // console.log("TT2:", t2 - t1)
+    //     // processingOrder.processingAction = action
+    //     if (action && (processingOrder.processingAction.type === 'TRANSFER' || processingOrder.processingAction.type === 'SHIPMENT')) {
+    //         // const t0 = (new Date()).getTime()
+    //         const pagedInputTxs = await this.listInputTransactions(stockOrder._id, null, false, true)
+    //         // const t1 = (new Date()).getTime()
+    //         // console.log("TTT:", t1 - t0, pagedInputTxs.count)
+    //         const inputTransactions = pagedInputTxs.items
+    //         // const lst = await Promise.all(inputTransactions.map(async (tx) => await this.stockOrderHistory(tx.sourceStockOrderId, cache)))
+    //         const lst: ChainHistory[] = []
+    //         for (const tx of inputTransactions) {
+    //             lst.push(await this.stockOrderHistory(tx.sourceStockOrderId, cache, processingOrderCache))
+    //         }
+    //         lst.forEach(res => history.ancestors.push(res))
+    //         // for (const tx of stockOrder.inputTransactions) {
+    //         //     history.ancestors.push(await this.stockOrderHistory(tx.sourceStockOrderId))
+    //         // }
+    //     } else if (action && processingOrder.processingAction.type === 'PROCESSING') {
+    //         // const t0 = (new Date()).getTime()
+    //         const pagedInputTxs = await this.listInputTransactions(processingOrder._id, null, false, true)
+    //         const inputTransactions = pagedInputTxs.items
+    //         // const t1 = (new Date()).getTime()
+    //         // console.log("TTT:", t1 - t0, pagedInputTxs.count)
+    //         // const lst = await Promise.all(inputTransactions.map(async (tx) => await this.stockOrderHistory(tx.sourceStockOrderId, cache)))
+    //         const lst: ChainHistory[] = []
+    //         for (const tx of inputTransactions) {
+    //             lst.push(await this.stockOrderHistory(tx.sourceStockOrderId, cache, processingOrderCache))
+    //         }
 
-            lst.forEach(res => history.ancestors.push(res))
+    //         lst.forEach(res => history.ancestors.push(res))
 
-            // for (const tx of processingOrder.inputTransactions) {
-            //     history.ancestors.push(await this.stockOrderHistory(tx.sourceStockOrderId))
-            // }
-        } else if (action) throw Error("Strange processing action type")
-        if (action && processingOrder.processingAction.type === 'SHIPMENT') {
-            // const t0 = (new Date()).getTime()
-            const triggeredOrders = await this.listTriggeredOrders(stockOrderId)
-            // const t1 = (new Date()).getTime()
-            // console.log("TTT:", t1 - t0)
+    //         // for (const tx of processingOrder.inputTransactions) {
+    //         //     history.ancestors.push(await this.stockOrderHistory(tx.sourceStockOrderId))
+    //         // }
+    //     } else if (action) throw Error("Strange processing action type")
+    //     if (action && processingOrder.processingAction.type === 'SHIPMENT') {
+    //         // const t0 = (new Date()).getTime()
+    //         const triggeredOrders = await this.listTriggeredOrders(stockOrderId)
+    //         // const t1 = (new Date()).getTime()
+    //         // console.log("TTT:", t1 - t0)
 
-            // const lst = await Promise.all(triggeredOrders.map(async (order) => await this.stockOrderHistory(order._id, cache)))
-            const lst: ChainHistory[] = []
-            for (const order of triggeredOrders) {
-                lst.push(await this.stockOrderHistory(order._id, cache, processingOrderCache))
-            }
+    //         // const lst = await Promise.all(triggeredOrders.map(async (order) => await this.stockOrderHistory(order._id, cache)))
+    //         const lst: ChainHistory[] = []
+    //         for (const order of triggeredOrders) {
+    //             lst.push(await this.stockOrderHistory(order._id, cache, processingOrderCache))
+    //         }
 
-            lst.forEach(res => history.ancestors.push(res))
+    //         lst.forEach(res => history.ancestors.push(res))
 
-        }
-        cache.set(stockOrderId, history)
-        return history
-    }
+    //     }
+    //     cache.set(stockOrderId, history)
+    //     return history
+    // }
 
     fieldIDToFieldName(fieldID: string): string {
         const res = (fieldIDToFieldNameDict as any)[fieldID];
@@ -2434,7 +2441,7 @@ export class ChainCode {
     //     return res
     // }
 
-    public extractBestFieldAggregate<T>(history: ChainHistory, fieldId: string, actionMap: Map<string, ChainProcessingAction>): WeightedAggregate<any>[] {
+    public extractBestFieldAggregate<T>(history: ChainHistory, fieldId: string): WeightedAggregate<any>[] {
         const stockOrder = history.stockOrder
         const value = (stockOrder as any)[fieldId];
         if (value) {
@@ -2459,7 +2466,8 @@ export class ChainCode {
             } as WeightedAggregate<any>]
         }
         // if the field is required for the action and empty, return
-        const action = actionMap.get(stockOrder.processingActionId)
+        // const action = actionMap.get(stockOrder.processingActionId)
+        const action = this.historyCache.getForKey<ChainProcessingAction>(stockOrder.processingActionId)
         if (action) {
             const res = action.requiredFields.find(x => x.label === fieldId)
             if (res && res.required) {
@@ -2477,7 +2485,7 @@ export class ChainCode {
         // we have at least one ancestor
         const outAggs: WeightedAggregate<any>[] = []
         for (const ancestor of history.ancestors) {
-            const aggs = this.extractBestFieldAggregate(ancestor, fieldId, actionMap);
+            const aggs = this.extractBestFieldAggregate(ancestor, fieldId);
             for (const agg of aggs) {
                 const found = outAggs.find(x => x.value === null && x.stockOrderId === agg.stockOrderId)
                 if (found) {   // remove duplicates
@@ -2496,7 +2504,7 @@ export class ChainCode {
         return false
     }
 
-    public extractBestDocumentAggregate<T>(history: ChainHistory, fieldId: string, actionMap: Map<string, ChainProcessingAction>, evidenceIdToEvidence: Map<string, ChainProcessingEvidenceType>): WeightedAggregate<any>[] {
+    public extractBestDocumentAggregate<T>(history: ChainHistory, fieldId: string): WeightedAggregate<any>[] {
         const stockOrder = history.stockOrder
         const docReq = stockOrder.documentRequirements.requirements.find(x => x.description === fieldId)
         // console.log("DR:", docReq)
@@ -2525,14 +2533,16 @@ export class ChainCode {
             } as WeightedAggregate<any>]
         }
         // if the field is required for the action and empty, return
-        const action = actionMap.get(stockOrder.processingActionId)
+        // const action = actionMap.get(stockOrder.processingActionId)
+        const action = this.historyCache.getForKey<ChainProcessingAction>(stockOrder.processingActionId)
 
 
         // Check if action requires the document
         const docIdToInfo = new Map<string, DocTypeIdsWithRequired>()
         if (action && action.requiredDocTypeIdsWithRequired) {
             action.requiredDocTypeIdsWithRequired.forEach(doc => {
-                docIdToInfo.set(evidenceIdToEvidence.get(doc.processingEvidenceTypeId).id, doc)   // tukaj je group info
+                const evd = this.historyCache.getForKey<ChainProcessingEvidenceType>(doc.processingEvidenceTypeId)
+                docIdToInfo.set(evd.id, doc)   // tukaj je group info
             })
 
             const theFieldReq = docIdToInfo.get(fieldId)
@@ -2553,7 +2563,7 @@ export class ChainCode {
         // we have at least one ancestor
         const outAggs: WeightedAggregate<any>[] = []
         for (const ancestor of history.ancestors) {
-            const aggs = this.extractBestDocumentAggregate(ancestor, fieldId, actionMap, evidenceIdToEvidence);
+            const aggs = this.extractBestDocumentAggregate(ancestor, fieldId);
             for (const agg of aggs) {
                 const found = outAggs.find(x => x.value === null && x.stockOrderId === agg.stockOrderId)
                 if (found) {   // remove duplicates
@@ -2606,22 +2616,142 @@ export class ChainCode {
         }
     }
 
-    public async aggregatesForStockOrderId(stockOrderId: string, transferCache: Map<string, ChainHistory> = null): Promise<ProcessingOrderHistory[]> {
-        const cache = transferCache ? transferCache : new Map<string, ChainHistory>()
-        const processingOrderCache = new Map<string, ChainProcessingOrder>();
-        const history = await this.stockOrderHistory(stockOrderId, cache, processingOrderCache)
-        // const res = await this.extractAggregates(history)
-        // let quoteStockOrder = await this.getStockOrder(stockOrderId)
-        // if(quoteStockOrder.processingAction.type !== 'SHIPMENT') {
-        //     quoteStockOrder = null;
-        // }
-        const res = await this.sortedTimeline([history])
-        const rootAgg = res.find(x => x.depth === 0);
-        const rootStockOrderId = rootAgg.stockOrderAggs[0].stockOrder._id
-        rootAgg.stockOrderAggs[0].stockOrder = await this.getStockOrder(rootStockOrderId)
-        await this.extractFacilitiesAndOrganizations(res);
-        return res
+    // public async aggregatesForStockOrderId(stockOrderId: string, transferCache: Map<string, ChainHistory> = null): Promise<ProcessingOrderHistory[]> {
+    //     const cache = transferCache ? transferCache : new Map<string, ChainHistory>()
+    //     const processingOrderCache = new Map<string, ChainProcessingOrder>();
+    //     const history = await this.stockOrderHistory(stockOrderId, cache, processingOrderCache)
+    //     // const res = await this.extractAggregates(history)
+    //     // let quoteStockOrder = await this.getStockOrder(stockOrderId)
+    //     // if(quoteStockOrder.processingAction.type !== 'SHIPMENT') {
+    //     //     quoteStockOrder = null;
+    //     // }
+    //     const res = await this.sortedTimeline([history])
+    //     const rootAgg = res.find(x => x.depth === 0);
+    //     const rootStockOrderId = rootAgg.stockOrderAggs[0].stockOrder._id
+    //     rootAgg.stockOrderAggs[0].stockOrder = await this.getStockOrder(rootStockOrderId)
+    //     await this.extractFacilitiesAndOrganizations(res);
+    //     return res
+    // }
+
+    public async aggregatesForStockOrderIdCachedFE(stockOrderId: string, transferCache: Map<string, ChainHistory> = null): Promise<B2CHistoryTimeline> {
+        const res = await this.aggregatesForStockOrderIdCached(stockOrderId, null, false)
+        const processing: B2CHistoryItem[] = []
+        const processingShorter: B2CHistoryItem[] = []
+        let coopName;
+        for (const item of res) {
+            if (item.processingOrder && item.processingOrder.processingAction) {
+                if (item.stockOrderAggs.length >= 1) {
+                    const tmp = {
+                        type: item.processingOrder.processingAction.type,
+                        name: item.processingOrder.processingAction.name,
+                        location: item.stockOrderAggs[0].stockOrder.facility.name,
+                        date: item.stockOrderAggs[0].stockOrder.productionDate
+                    } as B2CHistoryItem
+                    processing.push(tmp);
+                    if (item.processingOrder.processingAction.publicTimelineLabel) {
+                        const defaultLocation = item.stockOrderAggs[0].stockOrder.facility.name
+                        const publicTimelineLocation = item.processingOrder.processingAction.publicTimelineLocation
+                        const tmp2 = {
+                            type: item.processingOrder.processingAction.type,
+                            name: item.processingOrder.processingAction.publicTimelineLabel,
+                            location: publicTimelineLocation ? publicTimelineLocation : defaultLocation,
+                            date: item.processingOrder.processingDate,
+                            // iconClass: this.iconStyle(item)
+                            iconEnumType: item.processingOrder.processingAction.publicTimelineIcon
+                        } as B2CHistoryItem
+                        // console.log(item.processingOrder.processingDate)
+                        processingShorter.push(tmp2)
+                    }
+                }
+            } else {
+                if (item.stockOrderAggs.length >= 1) {
+                    const tmp = {
+                        type: null,
+                        name: null,
+                        location: item.stockOrderAggs[0].stockOrder.facility.name,
+                        date: item.stockOrderAggs[0].stockOrder.productionDate
+                    } as B2CHistoryItem
+                    coopName = item.stockOrderAggs[0].stockOrder.organization.name;
+                    processing.push(tmp);
+                    processingShorter.push(tmp)
+                }
+            }
+        }
+
+        return {
+            items: processing,
+            shortItems: processingShorter,
+            coopName
+        } as B2CHistoryTimeline
     }
+
+    public async aggregatesForStockOrderIdCached(stockOrderId: string, transferCache: Map<string, ChainHistory> = null, truncate = true): Promise<ProcessingOrderHistory[]> {
+        const cache = transferCache ? transferCache : new Map<string, ChainHistory>()
+        const history = await this.historyCache.stockOrderHistory(stockOrderId, cache)
+        const res = await this.historyCache.sortedTimeline([history])
+        const rootAgg = res.find(el => el.depth === 0);
+        const rootStockOrderId = rootAgg.stockOrderAggs[0].stockOrder._id
+        rootAgg.stockOrderAggs[0].stockOrder = {...this.historyCache.getForKey<ChainStockOrder>(rootStockOrderId)} // shallow copy due to triggerOrders!!
+        this.historyCache.enrichStockOrder(rootAgg.stockOrderAggs[0].stockOrder)
+        this.historyCache.extractFacilitiesAndOrganizations(res)
+        res.forEach(poh => {
+            delete poh.stockOrderIds
+            if (poh.processingOrder && !poh.processingOrder.processingAction) {
+                poh.processingOrder.processingAction = this.historyCache.getForKey<ChainProcessingAction>(poh.processingOrder.processingActionId)
+            }
+        })
+        // console.log("STRINGIFY")
+        // const stg = JSON.stringify(res)
+        // console.log(stg.length)
+        // const fs = require('fs')
+        // fs.writeFile('resp-big.json', stg, (err: any) => {
+        //     if (err) return console.log(err);
+        //     console.log('Hello World > helloworld.txt');
+        //   });
+        if (truncate) {
+            let size = 0
+            const outRes: ProcessingOrderHistory[] = []
+            let depth = 0
+            for (let i = 0; i < res.length; i++) {
+                // console.log("BEFORE ST", i)
+                const len = JSON.stringify(res[i]).length
+                // console.log("AFTER ST", i   )
+                if (i > 0 && size + len > HISTORY_CUTTOFF_SIZE) {
+                    for(let j = i; j < res.length; j++) {
+                        if(res[j].depth === 0) {
+                            outRes.push(res[j]);
+                            break;
+                        }
+                    }
+                    outRes.push({
+                        depth: depth + 1,
+                        processingOrder: null,
+                        stockOrderAggs: []
+                    })
+                    return outRes
+                }
+                size += len
+                depth = res[i].depth
+                outRes.push(res[i])
+            }
+            // const stg = JSON.stringify(res)
+            // if (stg.length > HISTORY_CUTTOFF_SIZE) {
+            //     const tmpRes = res.filter(x => x.depth < HISTORY_CUTOFF_DEPTH)
+            //     tmpRes.push({
+            //         depth: HISTORY_CUTOFF_DEPTH,
+            //         processingOrder: null,
+            //         stockOrderAggs: []
+            //     })
+            //     // console.log("LEN SHORT:", JSON.stringify(tmpRes).length)
+            //     return tmpRes
+            // }
+        }
+        // console.log("AFTER STRINGIFY")
+        return res
+        // return null
+    }
+
+
 
     // Organizations on purchase orders
     private producerIdsFromHistory(history: ChainHistory): Set<string> {
@@ -2646,24 +2776,101 @@ export class ChainCode {
         return res
     }
 
-    public async aggregatesForOrderId(orderId: string): Promise<ProcessingOrderHistory[]> {
+    public async producersForHistoriesCached(histories: ChainHistory[]): Promise<ChainOrganization[]> {
+        const producerIds = new Set<string>()
+        for (const history of histories) {
+            for (const id of this.producerIdsFromHistory(history)) producerIds.add(id)
+        }
+        return [...producerIds].map(id => this.historyCache.getForKey(id))
+        // const org = new ChainOrganizationDB()
+        // const res = await org.readForIds(this.dbService, [...producerIds])
+        // return res
+    }
+
+    // public async aggregatesForOrderId(orderId: string): Promise<ProcessingOrderHistory[]> {
+    //     const cache = new Map<string, ChainHistory>()
+    //     const processingOrderCache = new Map<string, ChainProcessingOrder>()
+    //     const order = await this.getOrder(orderId)
+    //     // console.log("ORD:", order.items.length)
+    //     const histories = []
+    //     for (const stockOrder of order.items) {
+    //         // const t0 = (new Date()).getTime()
+    //         const res1 = await this.stockOrderHistory(stockOrder._id, cache, processingOrderCache)
+    //         // const t1 = (new Date()).getTime()
+    //         // console.log("H-end", t1 - t0)
+    //         histories.push(res1)
+    //     }
+    //     const res = await this.sortedTimeline(histories)
+    //     // const rootAgg = res.find(x => x.depth === 0);
+    //     // const rootStockOrderId = rootAgg.stockOrderAggs[0].stockOrder._id
+    //     // rootAgg.stockOrderAggs[0].stockOrder = await this.getStockOrder(rootStockOrderId)
+    //     await this.extractFacilitiesAndOrganizations(res);
+    //     return res
+    // }
+
+    public async aggregatesForOrderIdCached(orderId: string, truncate = false): Promise<ProcessingOrderHistory[]> {
         const cache = new Map<string, ChainHistory>()
         const processingOrderCache = new Map<string, ChainProcessingOrder>()
-        const order = await this.getOrder(orderId)
-        // console.log("ORD:", order.items.length)
+        // const order = await this.getOrder(orderId)
+        const order = this.historyCache.getForKey<ChainProductOrder>(orderId)
+        this.historyCache.enrichProductOrder(order)
+        // console.log("OO:", order.items)
         const histories = []
         for (const stockOrder of order.items) {
-            // const t0 = (new Date()).getTime()
-            const res1 = await this.stockOrderHistory(stockOrder._id, cache, processingOrderCache)
-            // const t1 = (new Date()).getTime()
-            // console.log("H-end", t1 - t0)
+            const res1 = await this.historyCache.stockOrderHistory(stockOrder._id, cache)
             histories.push(res1)
         }
-        const res = await this.sortedTimeline(histories)
-        // const rootAgg = res.find(x => x.depth === 0);
-        // const rootStockOrderId = rootAgg.stockOrderAggs[0].stockOrder._id
-        // rootAgg.stockOrderAggs[0].stockOrder = await this.getStockOrder(rootStockOrderId)
-        await this.extractFacilitiesAndOrganizations(res);
+        // console.log("BEFORE TIMELINE")
+        const res = await this.historyCache.sortedTimeline(histories)
+        this.historyCache.extractFacilitiesAndOrganizations(res)
+        // console.log("AFTER TIMELINE")
+        res.forEach(poh => {
+            delete poh.stockOrderIds
+            if (poh.processingOrder && !poh.processingOrder.processingAction) {
+                poh.processingOrder.processingAction = this.historyCache.getForKey<ChainProcessingAction>(poh.processingOrder.processingActionId)
+            }
+        })
+
+        // if (truncate) {
+        //     const stg = JSON.stringify(res)
+        //     if (stg.length > HISTORY_CUTTOFF_SIZE) {
+        //         const tmpRes = res.filter(x => x.depth < HISTORY_CUTOFF_DEPTH)
+        //         tmpRes.push({
+        //             depth: HISTORY_CUTOFF_DEPTH,
+        //             processingOrder: null,
+        //             stockOrderAggs: []
+        //         })
+        //         // console.log("LEN SHORT:", JSON.stringify(tmpRes).length)
+        //         return tmpRes
+        //     }
+        // }
+
+        if (truncate) {
+            let size = 0
+            const outRes: ProcessingOrderHistory[] = []
+            let depth = 0
+            for (let i = 0; i < res.length; i++) {
+                const len = JSON.stringify(res[i]).length
+                if (i > 0 && size + len > HISTORY_CUTTOFF_SIZE) {
+                    for(let j = i; j < res.length; j++) {
+                        if(res[j].depth === 0) {
+                            outRes.push(res[j]);
+                            break;
+                        }
+                    }
+                    outRes.push({
+                        depth: depth + 1,
+                        processingOrder: null,
+                        stockOrderAggs: []
+                    })
+                    return outRes
+                }
+                size += len
+                depth = res[i].depth
+                outRes.push(res[i])
+            }
+        }
+
         return res
     }
 
@@ -2879,120 +3086,120 @@ export class ChainCode {
 
     // fieldDefinitionMap: Map<string, FieldDefinition>, documentDefinitionMap: Map<string, DocTypeIdsWithRequired>
 
-    public async sortedTimeline(histories: ChainHistory[]): Promise<ProcessingOrderHistory[]> {
-        const timeline: ProcessingOrderHistory[] = []
-        const processingHistoryMap = new Map<string, ProcessingOrderHistory[]>()
-        for (const history of histories) {
-            const action = await this.getProcessingAction(history.stockOrder.processingActionId)
-            const quoteOrder = action.type === 'SHIPMENT' ? history.stockOrder : null
-            const fieldDefinitionMap = new Map<string, FieldDefinition>()
-            const documentDefinitionMap = new Map<string, DocTypeIdsWithRequired>()
+    // public async sortedTimeline(histories: ChainHistory[]): Promise<ProcessingOrderHistory[]> {
+    //     const timeline: ProcessingOrderHistory[] = []
+    //     const processingHistoryMap = new Map<string, ProcessingOrderHistory[]>()
+    //     for (const history of histories) {
+    //         const action = await this.getProcessingAction(history.stockOrder.processingActionId)
+    //         const quoteOrder = action.type === 'SHIPMENT' ? history.stockOrder : null
+    //         const fieldDefinitionMap = new Map<string, FieldDefinition>()
+    //         const documentDefinitionMap = new Map<string, DocTypeIdsWithRequired>()
 
-            if (quoteOrder) {
-                action.requiredFields.forEach(field => {
-                    fieldDefinitionMap.set(field.label, field)
-                })
-                const evt = new ChainProcessingEvidenceTypeDB()
-                const evidenceIdToEvidence = new Map<string, ChainProcessingEvidenceType>()
-                const evidenceTypeIds = action.requiredDocTypeIdsWithRequired.map(x => x.processingEvidenceTypeId)
-                const evidenceTypes = await evt.readForIds(this.dbService, evidenceTypeIds)
-                evidenceTypes.forEach(ev => {
-                    evidenceIdToEvidence.set(ev._id, ev)
-                })
-                action.requiredDocTypeIdsWithRequired.forEach(docReq => {
-                    documentDefinitionMap.set(evidenceIdToEvidence.get(docReq.processingEvidenceTypeId).id, docReq)
-                })
-            }
-            const historyTimeline = await this.extractTimeline(history, fieldDefinitionMap, documentDefinitionMap)
-            for (const poh of historyTimeline) {
-                const key = (poh.processingOrder && poh.processingOrder._id) || '__NULL__'
-                const existingHistList: ProcessingOrderHistory[] = processingHistoryMap.get(key) || []
-                // find one fully matching
-                const existing = existingHistList.find(one => {
-                    // check if all stockOrders match
-                    if (one.stockOrderAggs.length !== poh.stockOrderAggs.length) return false
-                    for (const oneOf of one.stockOrderAggs) {
-                        if (!poh.stockOrderAggs.find(x => x.stockOrder._id === oneOf.stockOrder._id)) return false;
-                    }
-                    return true
-                })
-                if (existing) {
-                    // console.log("FOUND FOR:", key)
-                    continue;
-                }
-                existingHistList.push(poh)
-                processingHistoryMap.set(key, existingHistList)
-                timeline.push(poh)
-            }
-            // timeline = [...timeline, ...historyTimeline]
-        }
+    //         if (quoteOrder) {
+    //             action.requiredFields.forEach(field => {
+    //                 fieldDefinitionMap.set(field.label, field)
+    //             })
+    //             const evt = new ChainProcessingEvidenceTypeDB()
+    //             const evidenceIdToEvidence = new Map<string, ChainProcessingEvidenceType>()
+    //             const evidenceTypeIds = action.requiredDocTypeIdsWithRequired.map(x => x.processingEvidenceTypeId)
+    //             const evidenceTypes = await evt.readForIds(this.dbService, evidenceTypeIds)
+    //             evidenceTypes.forEach(ev => {
+    //                 evidenceIdToEvidence.set(ev._id, ev)
+    //             })
+    //             action.requiredDocTypeIdsWithRequired.forEach(docReq => {
+    //                 documentDefinitionMap.set(evidenceIdToEvidence.get(docReq.processingEvidenceTypeId).id, docReq)
+    //             })
+    //         }
+    //         const historyTimeline = await this.extractTimeline(history, fieldDefinitionMap, documentDefinitionMap)
+    //         for (const poh of historyTimeline) {
+    //             const key = (poh.processingOrder && poh.processingOrder._id) || '__NULL__'
+    //             const existingHistList: ProcessingOrderHistory[] = processingHistoryMap.get(key) || []
+    //             // find one fully matching
+    //             const existing = existingHistList.find(one => {
+    //                 // check if all stockOrders match
+    //                 if (one.stockOrderAggs.length !== poh.stockOrderAggs.length) return false
+    //                 for (const oneOf of one.stockOrderAggs) {
+    //                     if (!poh.stockOrderAggs.find(x => x.stockOrder._id === oneOf.stockOrder._id)) return false;
+    //                 }
+    //                 return true
+    //             })
+    //             if (existing) {
+    //                 // console.log("FOUND FOR:", key)
+    //                 continue;
+    //             }
+    //             existingHistList.push(poh)
+    //             processingHistoryMap.set(key, existingHistList)
+    //             timeline.push(poh)
+    //         }
+    //         // timeline = [...timeline, ...historyTimeline]
+    //     }
 
 
-        timeline.sort((a: ProcessingOrderHistory, b: ProcessingOrderHistory) => {
-            if (!a.processingOrder) {
-                if (!b.processingOrder) return 0
-                return 1
-            } else if (!b.processingOrder) return -1;
-            return a.processingOrder.created > b.processingOrder.created
-                ? -1
-                : (a.processingOrder.created < b.processingOrder.created
-                    ? 1
-                    : 0
-                )
-        })
-        const outTimeline = [] as ProcessingOrderHistory[]
-        let i = 0
-        let pending: ProcessingOrderHistory = null;
+    //     timeline.sort((a: ProcessingOrderHistory, b: ProcessingOrderHistory) => {
+    //         if (!a.processingOrder) {
+    //             if (!b.processingOrder) return 0
+    //             return 1
+    //         } else if (!b.processingOrder) return -1;
+    //         return a.processingOrder.created > b.processingOrder.created
+    //             ? -1
+    //             : (a.processingOrder.created < b.processingOrder.created
+    //                 ? 1
+    //                 : 0
+    //             )
+    //     })
+    //     const outTimeline = [] as ProcessingOrderHistory[]
+    //     let i = 0
+    //     let pending: ProcessingOrderHistory = null;
 
-        // join stockOrderAggs under the same processing order
-        while (i < timeline.length) {
-            const poh = timeline[i]
-            if (poh.processingOrder) {
-                if (pending) {
-                    pending.stockOrderAggs.sort((a: StockOrderAgg, b: StockOrderAgg) => {
-                        return a.stockOrder.created > b.stockOrder.created
-                            ? -1
-                            : (a.stockOrder.created < b.stockOrder.created
-                                ? 1
-                                : 0
-                            )
-                    })
-                    outTimeline.push(pending)
-                    pending = null
-                }
-                outTimeline.push(poh)
-                i++
-                continue;
-            }
-            // no processing order
-            if (!pending) {
-                pending = poh;
-                i++;
-                continue;
-            }
-            // pending exists
-            poh.stockOrderAggs.forEach(entry => {
-                const found = pending.stockOrderAggs.find(x => entry.stockOrder._id === x.stockOrder._id)
-                if (!found) {
-                    pending.stockOrderAggs.push(entry)
-                }
-            })
-            i++;
-        }
-        if (pending) {
-            pending.stockOrderAggs.sort((a: StockOrderAgg, b: StockOrderAgg) => {
-                return a.stockOrder.created > b.stockOrder.created
-                    ? -1
-                    : (a.stockOrder.created < b.stockOrder.created
-                        ? 1
-                        : 0
-                    )
-            })
-            outTimeline.push(pending)
-        }
-        await this.addOrganizationsToStockOrders(outTimeline)
-        return outTimeline
-    }
+    //     // join stockOrderAggs under the same processing order
+    //     while (i < timeline.length) {
+    //         const poh = timeline[i]
+    //         if (poh.processingOrder) {
+    //             if (pending) {
+    //                 pending.stockOrderAggs.sort((a: StockOrderAgg, b: StockOrderAgg) => {
+    //                     return a.stockOrder.created > b.stockOrder.created
+    //                         ? -1
+    //                         : (a.stockOrder.created < b.stockOrder.created
+    //                             ? 1
+    //                             : 0
+    //                         )
+    //                 })
+    //                 outTimeline.push(pending)
+    //                 pending = null
+    //             }
+    //             outTimeline.push(poh)
+    //             i++
+    //             continue;
+    //         }
+    //         // no processing order
+    //         if (!pending) {
+    //             pending = poh;
+    //             i++;
+    //             continue;
+    //         }
+    //         // pending exists
+    //         poh.stockOrderAggs.forEach(entry => {
+    //             const found = pending.stockOrderAggs.find(x => entry.stockOrder._id === x.stockOrder._id)
+    //             if (!found) {
+    //                 pending.stockOrderAggs.push(entry)
+    //             }
+    //         })
+    //         i++;
+    //     }
+    //     if (pending) {
+    //         pending.stockOrderAggs.sort((a: StockOrderAgg, b: StockOrderAgg) => {
+    //             return a.stockOrder.created > b.stockOrder.created
+    //                 ? -1
+    //                 : (a.stockOrder.created < b.stockOrder.created
+    //                     ? 1
+    //                     : 0
+    //                 )
+    //         })
+    //         outTimeline.push(pending)
+    //     }
+    //     await this.addOrganizationsToStockOrders(outTimeline)
+    //     return outTimeline
+    // }
 
 
     public async addOrganizationsToStockOrders(poHistories: ProcessingOrderHistory[]) {
@@ -3026,8 +3233,47 @@ export class ChainCode {
     // }
 
 
-    public verifyQuoteRequirementConfirmations(history: ChainHistory, actionMap: Map<string, ChainProcessingAction>, evidenceIdToEvidence: Map<string, ChainProcessingEvidenceType>): QuoteRequirementConfirmation[] {
-        const action = actionMap.get(history.stockOrder.processingActionId)
+    // public verifyQuoteRequirementConfirmations(history: ChainHistory, actionMap: Map<string, ChainProcessingAction>, evidenceIdToEvidence: Map<string, ChainProcessingEvidenceType>): QuoteRequirementConfirmation[] {
+    //     const action = actionMap.get(history.stockOrder.processingActionId)
+    //     const quoteOrder = action.type === 'SHIPMENT' ? history.stockOrder : null
+    //     const fieldDefinitionMap = new Map<string, FieldDefinition>()
+    //     const documentDefinitionMap = new Map<string, DocTypeIdsWithRequired>()
+
+    //     if (quoteOrder) {
+    //         action.requiredFields.forEach(field => {
+    //             fieldDefinitionMap.set(field.label, field)
+    //         })
+    //         const evt = new ChainProcessingEvidenceTypeDB()
+    //         action.requiredDocTypeIdsWithRequired.forEach(docReq => {
+    //             documentDefinitionMap.set(evidenceIdToEvidence.get(docReq.processingEvidenceTypeId).id, docReq)
+    //         })
+    //     }
+    //     // imamo vse requiremente
+    //     // let quoteRequirementMap = new Map<string, QuoteRequirementConfirmation>()
+    //     const result: QuoteRequirementConfirmation[] = []
+    //     for (const key of fieldDefinitionMap.keys()) {
+    //         const def = fieldDefinitionMap.get(key)
+    //         if (!(def.required || def.requiredOnQuote)) continue;   // such should not exist
+    //         const aggs = this.extractBestFieldAggregate(history, key, actionMap)
+    //         result.push({
+    //             fieldId: key,
+    //             aggregates: aggs,
+    //         } as QuoteRequirementConfirmation)
+    //     }
+    //     for (const key of documentDefinitionMap.keys()) {
+    //         // let def = documentDefinitionMap.get(key)
+    //         const aggs = this.extractBestDocumentAggregate(history, key, actionMap, evidenceIdToEvidence)
+    //         result.push({
+    //             fieldId: key,
+    //             aggregates: aggs,
+    //         } as QuoteRequirementConfirmation)
+    //     }
+    //     return result
+    // }
+
+    public verifyQuoteRequirementConfirmationsCached(history: ChainHistory): QuoteRequirementConfirmation[] {
+        // const action = actionMap.get(history.stockOrder.processingActionId)
+        const action = this.historyCache.getForKey<ChainProcessingAction>(history.stockOrder.processingActionId)
         const quoteOrder = action.type === 'SHIPMENT' ? history.stockOrder : null
         const fieldDefinitionMap = new Map<string, FieldDefinition>()
         const documentDefinitionMap = new Map<string, DocTypeIdsWithRequired>()
@@ -3036,9 +3282,11 @@ export class ChainCode {
             action.requiredFields.forEach(field => {
                 fieldDefinitionMap.set(field.label, field)
             })
-            const evt = new ChainProcessingEvidenceTypeDB()
+            // const evt = new ChainProcessingEvidenceTypeDB()
             action.requiredDocTypeIdsWithRequired.forEach(docReq => {
-                documentDefinitionMap.set(evidenceIdToEvidence.get(docReq.processingEvidenceTypeId).id, docReq)
+                // documentDefinitionMap.set(evidenceIdToEvidence.get(docReq.processingEvidenceTypeId).id, docReq)
+                const evd = this.historyCache.getForKey<ChainProcessingEvidenceType>(docReq.processingEvidenceTypeId)
+                documentDefinitionMap.set(evd.id, docReq)
             })
         }
         // imamo vse requiremente
@@ -3047,7 +3295,7 @@ export class ChainCode {
         for (const key of fieldDefinitionMap.keys()) {
             const def = fieldDefinitionMap.get(key)
             if (!(def.required || def.requiredOnQuote)) continue;   // such should not exist
-            const aggs = this.extractBestFieldAggregate(history, key, actionMap)
+            const aggs = this.extractBestFieldAggregate(history, key)
             result.push({
                 fieldId: key,
                 aggregates: aggs,
@@ -3055,7 +3303,7 @@ export class ChainCode {
         }
         for (const key of documentDefinitionMap.keys()) {
             // let def = documentDefinitionMap.get(key)
-            const aggs = this.extractBestDocumentAggregate(history, key, actionMap, evidenceIdToEvidence)
+            const aggs = this.extractBestDocumentAggregate(history, key)
             result.push({
                 fieldId: key,
                 aggregates: aggs,
@@ -3074,55 +3322,126 @@ export class ChainCode {
         return res
     }
 
-    public async processingActionMapForHistory(history: ChainHistory): Promise<Map<string, ChainProcessingAction>> {
-        const ids = this.processingActionIdsForHistory(history)
-        const org = new ChainProcessingActionDB()
-        const actions = await org.readForIds(this.dbService, ids)
-        const resMap = new Map<string, ChainProcessingAction>();
-        for (const action of actions) {
-            resMap.set(action._id, action)
-        }
-        return resMap
-    }
+    // public async processingActionMapForHistory(history: ChainHistory): Promise<Map<string, ChainProcessingAction>> {
+    //     const ids = this.processingActionIdsForHistory(history)
+    //     const org = new ChainProcessingActionDB()
+    //     const actions = await org.readForIds(this.dbService, ids)
+    //     const resMap = new Map<string, ChainProcessingAction>();
+    //     for (const action of actions) {
+    //         resMap.set(action._id, action)
+    //     }
+    //     return resMap
+    // }
+
+    // public async processingActionMapForHistoryCached(history: ChainHistory): Promise<Map<string, ChainProcessingAction>> {
+    //     const ids = this.processingActionIdsForHistory(history)
+    //     const resMap = new Map<string, ChainProcessingAction>();
+    //     ids.forEach(actionId => {
+    //         resMap.set(actionId, this.historyCache.getForKey(actionId))
+    //     })
+    //     return resMap
+    // }
 
 
+    // public async verifyQuoteRequirementsForStockOrder(stockOrderId: string, evidenceIdToEvidence: Map<string, ChainProcessingEvidenceType>, transferCache?: Map<string, ChainHistory>, fixFPQ = true): Promise<QuoteRequirementConfirmationsWithMetaData> {
+    //     const cache = transferCache ? transferCache : new Map<string, ChainHistory>()
+    //     const processingOrderCache = new Map<string, ChainProcessingOrder>();
+    //     // console.log("START")
+    //     // const history = await this.stockOrderHistory(stockOrderId, cache, processingOrderCache)
+    //     const history = await this.historyCache.stockOrderHistory(stockOrderId, cache)
+    //     // console.log("HISTORY")
+    //     // const actionMap = await this.processingActionMapForHistory(history)
+    //     const actionMap = await this.processingActionMapForHistoryCached(history)
+    //     // console.log("ACTION MAP - start verify")
+    //     const res = this.verifyQuoteRequirementConfirmations(history, actionMap, evidenceIdToEvidence)
+    //     // console.log("DONE")
+    //     if (fixFPQ) {
+    //         this.fixFPQ(res)
+    //     }
+    //     const producers = await this.producersForHistoriesCached([history])
+    //     return {
+    //         requirements: res,
+    //         producers
+    //     }
+    // }
 
-    public async verifyQuoteRequirementsForStockOrder(stockOrderId: string, evidenceIdToEvidence: Map<string, ChainProcessingEvidenceType>, transferCache?: Map<string, ChainHistory>, fixFPQ = true): Promise<QuoteRequirementConfirmationsWithMetaData> {
+    // public async verifyQuoteRequirementsForOrder(orderId: string): Promise<QuoteRequirementConfirmationsWithMetaData> {
+    //     const cache = new Map<string, ChainHistory>()
+    //     const order = await this.getOrder(orderId)
+    //     // console.log("ORD:", order.items.length)
+
+    //     const evidenceIdToEvidence = new Map<string, ChainProcessingEvidenceType>()
+    //     const evt = new ChainProcessingEvidenceTypeDB()
+    //     const evidenceTypes = await evt.readAll(this.dbService)
+    //     evidenceTypes.items.forEach(ev => {
+    //         evidenceIdToEvidence.set(ev._id, ev)
+    //     })
+
+    //     const producers: ChainOrganization[] = []
+    //     const result: QuoteRequirementConfirmation[] = []
+    //     for (const stockOrder of order.items) {
+    //         const res1 = await this.verifyQuoteRequirementsForStockOrder(stockOrder._id, evidenceIdToEvidence, cache, false)
+    //         for (const elt of res1.requirements) {
+    //             const found = result.find(x => x.fieldId === elt.fieldId)
+    //             if (!found) {
+    //                 result.push(elt)
+    //             } else {
+    //                 for (const agg of elt.aggregates) {
+    //                     const foundAgg = found.aggregates.find(x => x.stockOrderId === agg.stockOrderId)
+    //                     if (foundAgg) continue
+    //                     found.aggregates.push(agg)
+    //                 }
+    //             }
+    //         }
+    //         for (const producer of res1.producers) {
+    //             const found = producers.find(x => x._id === producer._id)
+    //             if (!found) {
+    //                 producers.push(producer)
+    //             }
+    //         }
+    //     }
+    //     await this.fixFPQ(result)
+
+    //     // let producers = this.producersForHistories(histories)
+    //     return {
+    //         requirements: result,
+    //         producers
+    //     }
+    // }
+
+    public async verifyQuoteRequirementsForStockOrderCached(stockOrderId: string, transferCache?: Map<string, ChainHistory>, fixFPQ = true): Promise<QuoteRequirementConfirmationsWithMetaData> {
         const cache = transferCache ? transferCache : new Map<string, ChainHistory>()
-        const processingOrderCache = new Map<string, ChainProcessingOrder>();
-        // console.log("START")
-        const history = await this.stockOrderHistory(stockOrderId, cache, processingOrderCache)
-        // console.log("HISTORY")
-        const actionMap = await this.processingActionMapForHistory(history)
-        // console.log("ACTION MAP - start verify")
-        const res = this.verifyQuoteRequirementConfirmations(history, actionMap, evidenceIdToEvidence)
-        // console.log("DONE")
+        const history = await this.historyCache.stockOrderHistory(stockOrderId, cache)
+        // const actionMap = await this.processingActionMapForHistoryCached(history)
+        const res = this.verifyQuoteRequirementConfirmationsCached(history)
         if (fixFPQ) {
-            this.fixFPQ(res)
+            await this.fixFPQCached(res)
         }
-        const producers = await this.producersForHistories([history])
+        const producers = await this.producersForHistoriesCached([history])
         return {
             requirements: res,
             producers
         }
     }
 
-    public async verifyQuoteRequirementsForOrder(orderId: string): Promise<QuoteRequirementConfirmationsWithMetaData> {
+    public async verifyQuoteRequirementsForOrderCached(orderId: string): Promise<QuoteRequirementConfirmationsWithMetaData> {
         const cache = new Map<string, ChainHistory>()
-        const order = await this.getOrder(orderId)
-        // console.log("ORD:", order.items.length)
+        const order = this.historyCache.getForKey<ChainProductOrder>(orderId)
+        this.historyCache.enrichProductOrder(order)
 
-        const evidenceIdToEvidence = new Map<string, ChainProcessingEvidenceType>()
-        const evt = new ChainProcessingEvidenceTypeDB()
-        const evidenceTypes = await evt.readAll(this.dbService)
-        evidenceTypes.items.forEach(ev => {
-            evidenceIdToEvidence.set(ev._id, ev)
-        })
+        // const evidenceIdToEvidence = new Map<string, ChainProcessingEvidenceType>()
+
+
+        // const evt = new ChainProcessingEvidenceTypeDB()
+        // const evidenceTypes = await evt.readAll(this.dbService)
+        // evidenceTypes.items.forEach(ev => {
+        //     evidenceIdToEvidence.set(ev._id, ev)
+        // })
 
         const producers: ChainOrganization[] = []
         const result: QuoteRequirementConfirmation[] = []
         for (const stockOrder of order.items) {
-            const res1 = await this.verifyQuoteRequirementsForStockOrder(stockOrder._id, evidenceIdToEvidence, cache, false)
+            const res1 = await this.verifyQuoteRequirementsForStockOrderCached(stockOrder._id, cache, false)
             for (const elt of res1.requirements) {
                 const found = result.find(x => x.fieldId === elt.fieldId)
                 if (!found) {
@@ -3142,8 +3461,8 @@ export class ChainCode {
                 }
             }
         }
-        await this.fixFPQ(result)
-
+        // await this.fixFPQ(result)
+        await this.fixFPQCached(result)
         // let producers = this.producersForHistories(histories)
         return {
             requirements: result,
@@ -3151,17 +3470,28 @@ export class ChainCode {
         }
     }
 
-    public async fixFPQ(qReqConf: QuoteRequirementConfirmation[]) {
-        const pev = new ChainProcessingEvidenceTypeDB()
-        const allEvidenceTypesPaginated = await pev.readAll(this.dbService)
-        const allEvidenceTypes = allEvidenceTypesPaginated.items
-        const idToEvType = new Map<string, ChainProcessingEvidenceType>()
-        allEvidenceTypes.forEach(val => {
-            idToEvType.set(val.id, val)
-        })
-        // console.log(idToEvType)
+    // public async fixFPQ(qReqConf: QuoteRequirementConfirmation[]) {
+    //     const pev = new ChainProcessingEvidenceTypeDB()
+    //     const allEvidenceTypesPaginated = await pev.readAll(this.dbService)
+    //     const allEvidenceTypes = allEvidenceTypesPaginated.items
+    //     const idToEvType = new Map<string, ChainProcessingEvidenceType>()
+    //     allEvidenceTypes.forEach(val => {
+    //         idToEvType.set(val.id, val)
+    //     })
+    //     // console.log(idToEvType)
+    //     qReqConf.forEach(qreq => {
+    //         const evidence = idToEvType.get(qreq.fieldId)
+    //         if (evidence) {
+    //             qreq.fairness = evidence.fairness
+    //             qreq.provenance = evidence.provenance
+    //             qreq.quality = evidence.quality
+    //         }
+    //     })
+    // }
+
+    public async fixFPQCached(qReqConf: QuoteRequirementConfirmation[]) {
         qReqConf.forEach(qreq => {
-            const evidence = idToEvType.get(qreq.fieldId)
+            const evidence = this.historyCache.getForKey<ChainProcessingEvidenceType>(qreq.fieldId)
             if (evidence) {
                 qreq.fairness = evidence.fairness
                 qreq.provenance = evidence.provenance
@@ -3814,20 +4144,28 @@ export class ChainCode {
     // }
 
 
-    public async getB2CDataForStockOrder(stockOrderId: string, orderId: boolean, cooperative: boolean, cuppingGrade: boolean): Promise<any> {
+    public async getB2CDataForStockOrderCached(stockOrderId: string, orderId: boolean, cooperative: boolean, cuppingGrade: boolean): Promise<any> {
 
-        const org = new ChainStockOrderDB()
-        const stockOrder = await getResponseValue(org.read(this.dbService, stockOrderId, false))
+        // const org = new ChainStockOrderDB()
+        // const stockOrder = await getResponseValue(org.read(this.dbService, stockOrderId, false))
 
+        const stockOrder = {...this.historyCache.getForKey<ChainStockOrder>(stockOrderId)}
+        this.historyCache.enrichStockOrder(stockOrder)
         const result = [];
+        // if (orderId && stockOrder.orderId) {
+        //     stockOrder.productOrder = await this.getOrder(stockOrder.orderId, false)
+        //     result.push({ orderId: stockOrder.productOrder.id })
+        // }
         if (orderId && stockOrder.orderId) {
-            stockOrder.productOrder = await this.getOrder(stockOrder.orderId, false)
+            stockOrder.productOrder = {...this.historyCache.getForKey<ChainProductOrder>(stockOrder.orderId)}
+            this.historyCache.enrichProductOrder(stockOrder.productOrder)
             result.push({ orderId: stockOrder.productOrder.id })
         }
 
         let history = null;
         if (cooperative) {
-            history = await this.aggregatesForStockOrderId(stockOrderId);
+            // history = await this.aggregatesForStockOrderId(stockOrderId);
+            history = await this.aggregatesForStockOrderIdCached(stockOrderId, null, false);
             const len = history.length;
             if (len >= 1) {
                 const purchaseOrders = history[len - 1];
@@ -3839,7 +4177,8 @@ export class ChainCode {
         }
 
         if (cuppingGrade) {
-            if (!history) history = await this.aggregatesForStockOrderId(stockOrderId);
+            // if (!history) history = await this.aggregatesForStockOrderId(stockOrderId);
+            if (!history) history = await this.aggregatesForStockOrderIdCached(stockOrderId);
             const len = history.length;
             let gradeFound: boolean = false;
             let flavourFound: boolean = false;
@@ -3907,7 +4246,7 @@ export class ChainCode {
         let sum = 0;
         if (productionDate && productionDate.length >= 4) {
             const year = productionDate.substring(0, 4);
-            const stockOrderList = await this.listAllStockOrdersForOrganization(organizationId, true, null, null, null, null, year+"-01-01", year+"-12-31", null, { limit: 1000 });
+            const stockOrderList = await this.listAllStockOrdersForOrganization(organizationId, true, null, null, null, null, year + "-01-01", year + "-12-31", null, { limit: 1000 });
             if (stockOrderList && stockOrderList.items) {
                 sum = stockOrderList.items.map(o => o.totalQuantity).reduce((a, c) => a + c);
             }
@@ -3923,7 +4262,8 @@ export class ChainCode {
         let bonusPayment = 0;
         let premiumPayment = 0;
         let productionDate = null;
-        const resAgg = await this.aggregatesForStockOrderId(soId);
+        // const resAgg = await this.aggregatesForStockOrderId(soId);
+        const resAgg = await this.aggregatesForStockOrderIdCached(soId);
         if (resAgg) {
             const len = resAgg.length;
             for (const so of resAgg[len - 1].stockOrderAggs) {
@@ -3967,18 +4307,22 @@ export class ChainCode {
     }
 
     public async getProcessingOrder(id: string, writeDatabase = false, ignoreNoInputTransactions = false, lastVersionPurpose = false): Promise<ChainProcessingOrder> {
+        console.log("START")
         const org = new ChainProcessingOrderDB()
         const po = await getResponseValue(org.read(this.dbService, id, writeDatabase))
         const action = await this.getProcessingAction(po.processingActionId, writeDatabase, lastVersionPurpose).catch(e => null)
         po.processingAction = action
         if (!lastVersionPurpose) {
+            console.log("START-2")
             const ord = new ChainStockOrderDB()
             po.targetStockOrders = await ord.readForIds(this.dbService, po.targetStockOrderIds, writeDatabase)
             po.inputTransactions = []
             if (action && action.type === 'PROCESSING') {
+                console.log("PROCESSING")
                 let offset = 0
                 const limit = 1000
                 po.inputTransactions = []
+                console.log("TRANSACTION LOOP")
                 while (true) {
                     const inTxsPages = await this.listInputTransactions(po._id, { limit, offset }, writeDatabase)
                     po.inputTransactions.push(...inTxsPages.items)
@@ -3986,22 +4330,33 @@ export class ChainCode {
                     offset += limit;
                     if (offset >= count) break
                 }
+                console.log("TRANSACTION LOOP END")
             }
             if (action && action.type === 'TRANSFER') {
-                for (const order of po.targetStockOrders) {
-                    const inTxsPages = await this.listInputTransactions(order._id, { limit: 2, offset: 0 }, true)
+                po.inputTransactions = await Promise.all(po.targetStockOrders.map(async (so) => {
+                    const inTxsPages = await this.listInputTransactions(so._id, { limit: 2, offset: 0 }, true)
                     if (inTxsPages.count === 0) {
                         if (!ignoreNoInputTransactions) throw Error("No transaction to TRANSFER order.")
                     }
                     if (inTxsPages.count > 1) throw Error("Multiple transactions to TRANSFER order.")
-                    po.inputTransactions.push(inTxsPages.items[0])
-                }
+                    return inTxsPages.items[0]
+                }))
+                // for (const order of po.targetStockOrders) {
+                //     const inTxsPages = await this.listInputTransactions(order._id, { limit: 2, offset: 0 }, true)
+                //     if (inTxsPages.count === 0) {
+                //         if (!ignoreNoInputTransactions) throw Error("No transaction to TRANSFER order.")
+                //     }
+                //     if (inTxsPages.count > 1) throw Error("Multiple transactions to TRANSFER order.")
+                //     po.inputTransactions.push(inTxsPages.items[0])
+                // }
             }
             const org2 = new ChainStockOrderDB()
+            console.log("INPUT ORDERS")
             po.inputOrders = await org2.readForIds(this.dbService, po.inputTransactions.map(tx => tx.sourceStockOrderId), writeDatabase)
             if (po.desiredQuantityUnit) {
                 po.desiredQuantityUnit = await this.getMeasureUnitType(po.desiredQuantityUnit._id)
             }
+            console.log("END IF")
         }
         return po
 

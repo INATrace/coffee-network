@@ -30,3 +30,25 @@ This module implements Hyperledger Fabric network.
     * installs versions of the chaincode that have not yet been installed.
 * `./network.sh down`:
     * stops network (removes Docker containers).
+
+## Development hints
+
+If you are developing on MacOS, then one has to swithch off the following: Preferences -> Experimental features -> Use gRPC FUSE for file sharing
+
+## Migration protocol to blockchain
+
+- Sync production database to write couchDB database
+- Carry out the migration by using write database
+
+### Replication of one couchdb
+
+- Remote database
+    - Name: ""
+    - Username, password
+- New remote database
+    - Name: ""
+    - Username, password
+- Options:
+    - Replication type: continuous
+
+

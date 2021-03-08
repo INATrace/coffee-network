@@ -17,13 +17,14 @@ export function expressAuthentication(
 
 
         return new Promise((resolve, reject) => {
-            const token = request.cookies['inatrace-test-refreshToken']
+            const token = request.cookies[process.env.JWT_TOKEN_NAME]
             // console.log("TOKEN:", token)
             if (!token) {
                 reject(new Error("No token provided"));
             }
             jwt.verify(token, process.env.JWT_SIGNING_KEY, (err: any, decoded: any) => {
                 if (err) {
+                    // console.log("XXXX-ERR", err)
                     reject(err);
                 } else {
                     // Check if JWT contains all required scopes

@@ -443,8 +443,25 @@ export interface StockOrderAgg {
 export interface ProcessingOrderHistory {
     depth: number;
     processingOrder: ChainProcessingOrder;
-    stockOrderAggs: StockOrderAgg[]
+    stockOrderAggs: StockOrderAgg[];
+    stockOrderIds?: any
 }
+
+export interface B2CHistoryItem {
+    type?: string;
+    name: string;
+    location?: string;
+    date?: string;
+    iconEnumType?: string;
+    iconClass?: string;
+}
+
+export interface B2CHistoryTimeline {
+    items: B2CHistoryItem[];
+    shortItems: B2CHistoryItem[];
+    coopName?: string
+}
+
 // export interface StockOrderAggregate {
 //     certificates?:
 //     ChainCertification[] | null;

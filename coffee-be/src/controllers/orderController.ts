@@ -55,7 +55,7 @@ export class OrderController extends Controller {
         @Path() orderId: string,
     ): Promise<ApiResponse<ProcessingOrderHistory[]>> {
         return handleApiResponse(
-            this.chaincode.aggregatesForOrderId(orderId)
+            this.chaincode.aggregatesForOrderIdCached(orderId, true)
         )
     }
 
@@ -65,7 +65,7 @@ export class OrderController extends Controller {
         @Path() orderId: string,
     ): Promise<ApiResponse<QuoteRequirementConfirmationsWithMetaData>> {
         return handleApiResponse(
-            this.chaincode.verifyQuoteRequirementsForOrder(orderId)
+            this.chaincode.verifyQuoteRequirementsForOrderCached(orderId)
         )
     }
 

@@ -1,6 +1,6 @@
 import express from "express";
 import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
-import { Inject } from "typescript-ioc";
+import { Inject, Singleton } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainHistory } from "../models/chain/ChainHistory";
@@ -8,6 +8,7 @@ import { AvailabilityInFacilitiesRequest, ChainSemiProductAvailability } from ".
 import { ChainStockOrder, ProcessingOrderHistory, QuoteRequirementConfirmation, StockOrderAggregates, WeightedAggregate } from "../models/chain/ChainStockOrder";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Singleton
 @Security("jwt")
 @Tags('Stock order')
 @Route("chain-api/data/stock-order")
@@ -331,7 +332,8 @@ export class StockOrderController extends Controller {
         @Path() stockOrderId: string,
     ): Promise<ApiResponse<ProcessingOrderHistory[]>> {
         return handleApiResponse(
-            this.chaincode.aggregatesForStockOrderId(stockOrderId)
+            // this.chaincode.aggregatesForStockOrderId(stockOrderId)
+            this.chaincode.aggregatesForStockOrderIdCached(stockOrderId, null, true)
         )
     }
 
@@ -352,7 +354,7 @@ export class StockOrderController extends Controller {
         @Query() cuppingGrade?: boolean,
     ): Promise<ApiResponse<any>> {
         return handleApiResponse(
-            this.chaincode.getB2CDataForStockOrder(stockOrderId, orderId, cooperative, cuppingGrade)
+            this.chaincode.getB2CDataForStockOrderCached(stockOrderId, orderId, cooperative, cuppingGrade)
         )
     }
 

@@ -114,7 +114,7 @@ export class PaymentsController extends Controller {
      * Deletes payment
      * @param requestBody
      */
-    @Post('delete')
+    @Post('delete-payment')
     public async deletePayment(
         @Request() request: express.Request,
         @Body() requestBody: ChainPayment

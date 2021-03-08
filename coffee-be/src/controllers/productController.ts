@@ -1,11 +1,12 @@
 import express from "express";
 import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags, Request  } from "tsoa";
-import { Inject } from "typescript-ioc";
+import { Inject, Singleton } from "typescript-ioc";
 import { ChainCode } from "../contracts/chaincode";
 import { ApiResponse, handleApiResponse } from "../models/chain/ApiResponse";
 import { ChainProduct } from "../models/chain/ChainProduct";
 import { PaginatedList } from "../models/chain/PaginatedList";
 
+@Singleton
 @Security("jwt")
 @Tags('Product')
 @Route("chain-api/data/product")
